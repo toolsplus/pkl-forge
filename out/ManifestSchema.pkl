@@ -1,0 +1,5949 @@
+/// This module was generated from JSON Schema from
+/// <file:///Users/tbinna/Code/ToolsPlus/pkl-forge/out/manifest-schema.json>.
+///
+/// WARN: The root schema describes open-ended properties, but this is not possible to describe at the
+/// module level.
+module ManifestSchema
+
+/// app
+app: AppSchema
+
+/// connectModules
+connectModules: ConnectModuleSchema?
+
+/// modules
+modules: ModuleSchema?
+
+/// permissions
+permissions: AppPermissionsSchema?
+
+/// resources
+resources: Listing<HostedResourcesSchema>?
+
+/// remotes
+remotes: Listing<RemotesSchema>?
+
+/// providers
+providers: Mapping<String, Any>?
+
+/// AppSchema
+class AppSchema {
+  /// description
+  ///
+  /// The app's description.
+  description: String(length <= 1000)?
+
+  /// id
+  ///
+  /// A unique Atlassian Resource Identifier (ari) assigned to your app.
+  id: String(matches(Regex(#"ari:cloud:ecosystem::app/[^\s]+"#)))
+
+  /// runtime
+  ///
+  /// Options related to the Forge Javascript runtime.
+  runtime: Runtime?
+
+  /// licensing
+  ///
+  /// Options related to paid app licensing
+  licensing: Licensing?
+
+  /// features
+  ///
+  /// Features related to app
+  features: Features?
+
+  /// connect
+  ///
+  /// Connect Configuration for the forge app.
+  connect: Connect?
+
+  /// Options related to hosted storage
+  storage: Storage?
+
+  /// package
+  ///
+  /// Options for packaging the Forge app.
+  package: Package?
+}
+
+/// runtime
+///
+/// Options related to the Forge Javascript runtime.
+class Runtime {
+  /// snapshots
+  ///
+  /// Whether a snapshot of the app is taken at deployment time. Default value of true. This option only
+  /// takes effect with the "sandbox" runtime.
+  ///
+  /// Default if undefined: `true`
+  snapshots: Boolean?
+
+  /// name
+  ///
+  /// Name of the runtime to use for app execution.
+  ///
+  /// Default if undefined: `"sandbox"`
+  name: ("sandbox"|"nodejs18.x")?
+}
+
+/// licensing
+///
+/// Options related to paid app licensing
+class Licensing {
+  /// enabled
+  ///
+  /// Whether to enable paid app licensing for production installations of this app. Default value of
+  /// false.
+  ///
+  /// Default if undefined: `false`
+  enabled: Boolean
+}
+
+/// features
+///
+/// Features related to app
+class Features {
+  /// autoUserConsent
+  ///
+  /// This property is deprecated and no longer required to use simplified user consent. Please remove it
+  /// from your manifest as in a future release this will become an error.
+  ///
+  /// Default if undefined: `false`
+  autoUserConsent: Boolean?
+}
+
+/// connect
+///
+/// Connect Configuration for the forge app.
+class Connect {
+  /// key
+  ///
+  /// The app's connect key
+  key: String(length.isBetween(1, 90), matches(Regex("^[a-zA-Z0-9-._]+$")))
+
+  /// A key for the remote, which other modules can refer to. Must be unique within the manifest and have
+  /// a maximum of 23 characters.
+  remote: String(length <= 23, matches(Regex("^[a-zA-Z0-9_-]+$")))?
+
+  /// The type of authentication used to communicate with tenant APIs
+  ///
+  /// Default if undefined: `"jwt"`
+  authentication: ("jwt"|"oauth2")?
+}
+
+/// Options related to hosted storage
+class Storage {
+  /// Labels to classify the type of data stored
+  classifications: Listing<"ugc"|"pii"|"other">(!isEmpty)?
+
+  /// Custom schemas for app stored entities.
+  entities: Listing<Entity>(!isEmpty)?
+}
+
+class Entity {
+  /// A name for the entity. Must be unique within the manifest and have a maximum of 60 characters.
+  name: String(length.isBetween(3, 60), matches(Regex(#"^(?![_\.-])(?!.*\.{2})[a-z0-9:\-_.]*(?<![.])$"#)))
+
+  /// Attributes of the entity.
+  attributes: Mapping<String(matches(Regex("^[a-zA-Z][a-zA-Z0-9_]*$"))), Attributes>
+
+  /// Indexes on attributes of the schema.
+  indexes: Listing<String|IndexAlternate1>(!isEmpty)?
+}
+
+/// An attribute of the entity. Must be unique within the entity and have a maximum of 30 characters.
+class Attributes {
+  /// The data type for the given attribute.
+  type: "string"|"boolean"|"float"|"integer"|"any" = Undefined()
+}
+
+class IndexAlternate1 {
+  name: String
+
+  range: Listing<String>(!isEmpty)
+
+  partition: Listing<String>(!isEmpty)?
+}
+
+/// package
+///
+/// Options for packaging the Forge app.
+class Package {
+  /// A list of files to include in the Forge app package.
+  extraFiles: Listing<String>?
+}
+
+/// ConnectModuleSchema
+class ConnectModuleSchema {
+  lifecycle: Listing<Lifecycle>(!isEmpty)?
+
+  `jira:keyboardShortcuts`: Listing<`ConnectConfluence:keyboardShortcut`>(!isEmpty)?
+
+  `jira:adminPages`: Listing<`ConnectConfluence:configurePage`>(!isEmpty)?
+
+  `jira:webPanels`: Listing<`ConnectConfluence:webPanel`>(!isEmpty)?
+
+  `jira:webhooks`: Listing<`ConnectConfluence:webhook`>(!isEmpty)?
+
+  `jira:postInstallPage`: Listing<`ConnectConfluence:generalPage`>(!isEmpty)?
+
+  `jira:webSections`: Listing<`ConnectConfluence:webSection`>(!isEmpty)?
+
+  `jira:generalPages`: Listing<`ConnectConfluence:generalPage`>(!isEmpty)?
+
+  `jira:webItems`: Listing<`ConnectConfluence:webItem`>(!isEmpty)?
+
+  `jira:configurePage`: Listing<`ConnectConfluence:configurePage`>(!isEmpty)?
+
+  `jira:dialogs`: Listing<`ConnectConfluence:dialog`>(!isEmpty)?
+
+  `jira:jiraEntityProperties`: Listing<`ConnectJira:jiraEntityProperty`>(!isEmpty)?
+
+  `jira:jiraFeatureFlagInfoProvider`: Listing<`ConnectJira:jiraFeatureFlagInfoProvider`>(!isEmpty)?
+
+  `jira:jiraProjectPermissions`: Listing<`ConnectJira:jiraProjectPermission`>(!isEmpty)?
+
+  `jira:jiraProjectPages`: Listing<`ConnectJira:jiraProjectPage`>(!isEmpty)?
+
+  `jira:jiraSearchRequestViews`: Listing<`ConnectJira:jiraSearchRequestView`>(!isEmpty)?
+
+  `jira:jiraIssueGlances`: Listing<`ConnectJira:jiraIssueGlance`>(!isEmpty)?
+
+  `jira:jiraIssueTabPanels`: Listing<`ConnectJira:jiraProjectTabPanel`>(!isEmpty)?
+
+  `jira:jiraBuildInfoProvider`: Listing<`ConnectJira:jiraBuildInfoProvider`>(!isEmpty)?
+
+  `jira:jiraWorkflowConditions`: Listing<`ConnectJira:jiraWorkflowCondition`>(!isEmpty)?
+
+  `jira:jiraProjectAdminTabPanels`: Listing<`ConnectJira:jiraProjectAdminTabPanel`>(!isEmpty)?
+
+  `jira:jiraWorkflowValidators`: Listing<`ConnectJira:jiraWorkflowValidator`>(!isEmpty)?
+
+  `jira:jiraRemoteLinkInfoProvider`: Listing<`ConnectJira:jiraRemoteLinkInfoProvider`>(!isEmpty)?
+
+  `jira:jiraBackgroundScripts`: Listing<`ConnectJira:jiraBackgroundScript`>(!isEmpty)?
+
+  `jira:jiraDeploymentInfoProvider`: Listing<`ConnectJira:jiraDeploymentInfoProvider`>(!isEmpty)?
+
+  `jira:jiraReports`: Listing<`ConnectJira:jiraReport`>(!isEmpty)?
+
+  `jira:jiraIssueContexts`: Listing<`ConnectJira:jiraIssueContext`>(!isEmpty)?
+
+  `jira:jiraDashboardItems`: Listing<`ConnectJira:jiraDashboardItem`>(!isEmpty)?
+
+  `jira:jiraWorkflowPostFunctions`: Listing<`ConnectJira:jiraWorkflowPostFunction`>(!isEmpty)?
+
+  `jira:jiraIssueContents`: Listing<`ConnectJira:jiraIssueContent`>(!isEmpty)?
+
+  `jira:jiraDevelopmentTool`: Listing<`ConnectJira:jiraDevelopmentTool`>(!isEmpty)?
+
+  `jira:jiraProjectTabPanels`: Listing<`ConnectJira:jiraProjectTabPanel`>(!isEmpty)?
+
+  `jira:jiraGlobalPermissions`: Listing<`ConnectJira:jiraGlobalPermission`>(!isEmpty)?
+
+  `jira:jiraIssueFields`: Listing<`ConnectJira:jiraIssueField`>(!isEmpty)?
+
+  `jira:jiraIssueTypes`: Listing<`ConnectJira:jiraIssueType`>(!isEmpty)?
+
+  `jira:jiraTimeTrackingProviders`: Listing<`ConnectJira:jiraTimeTrackingProvider`>(!isEmpty)?
+
+  `jira:lifecycle`: Listing<`ConnectConfluence:lifecycle`>(!isEmpty)?
+
+  `confluence:keyboardShortcuts`: Listing<`ConnectConfluence:keyboardShortcut`>(!isEmpty)?
+
+  `confluence:adminPages`: Listing<`ConnectConfluence:configurePage`>(!isEmpty)?
+
+  `confluence:webPanels`: Listing<`ConnectConfluence:webPanel`>(!isEmpty)?
+
+  `confluence:webhooks`: Listing<`ConnectConfluence:webhook`>(!isEmpty)?
+
+  `confluence:postInstallPage`: Listing<`ConnectConfluence:generalPage`>(!isEmpty)?
+
+  `confluence:webSections`: Listing<`ConnectConfluence:webSection`>(!isEmpty)?
+
+  `confluence:generalPages`: Listing<`ConnectConfluence:generalPage`>(!isEmpty)?
+
+  `confluence:webItems`: Listing<`ConnectConfluence:webItem`>(!isEmpty)?
+
+  `confluence:configurePage`: Listing<`ConnectConfluence:configurePage`>(!isEmpty)?
+
+  `confluence:dialogs`: Listing<`ConnectConfluence:dialog`>(!isEmpty)?
+
+  `confluence:blueprints`: Listing<`ConnectConfluence:blueprint`>(!isEmpty)?
+
+  `confluence:spaceToolsTabs`: Listing<`ConnectConfluence:spaceToolsTab`>(!isEmpty)?
+
+  `confluence:confluenceContentProperties`: Listing<`ConnectConfluence:confluenceContentProperty`>(!isEmpty)?
+
+  `confluence:customContent`: Listing<`ConnectConfluence:customContent`>(!isEmpty)?
+
+  `confluence:dynamicContentMacros`: Listing<`ConnectConfluence:dynamicContentMacro`>(!isEmpty)?
+
+  `confluence:staticContentMacros`: Listing<`ConnectConfluence:staticContentMacro`>(!isEmpty)?
+
+  `confluence:contentBylineItems`: Listing<`ConnectConfluence:contentBylineItem`>(!isEmpty)?
+
+  `confluence:confluenceThemes`: Listing<`ConnectConfluence:confluenceTheme`>(!isEmpty)?
+
+  `confluence:lifecycle`: Listing<`ConnectConfluence:lifecycle`>(!isEmpty)?
+
+  `jira:serviceDeskPortalRequestViewPanels`: Listing<`Jira:serviceDeskPortalRequestViewPanel`>(!isEmpty)?
+}
+
+class Lifecycle {
+  key: ModuleKeySchema
+
+  event: "installed"|"uninstalled" = Undefined()
+
+  remote: String
+
+  url: String
+}
+
+class `ConnectConfluence:keyboardShortcut` {
+  shortcut: String(length <= 3, matches(Regex("[a-z]{1,3}")))?
+
+  context: (
+    "global"
+    |"GLOBAL"
+    |"issue_navigation"
+    |"ISSUE_NAVIGATION"
+    |"issue_action"
+    |"ISSUE_ACTION"
+    |"agile_board"
+    |"AGILE_BOARD")?
+
+  name: I18nProperty?
+
+  /// Keyboard Shortcut Target
+  ///
+  ///
+  ///
+  /// The bean containing the key of the target module of the shortcut.
+  target: Target?
+
+  key: ModuleKeySchema
+}
+
+/// Keyboard Shortcut Target
+///
+///
+///
+/// The bean containing the key of the target module of the shortcut.
+class Target {
+  key: String(length <= 1000, matches(Regex("^[a-zA-Z0-9-]+$")))
+}
+
+class `ConnectConfluence:configurePage` {
+  icon: Icon?
+
+  name: I18nProperty?
+
+  weight: Int?
+
+  fullPage: Boolean?
+
+  cacheable: Boolean?
+
+  location: String(length <= 100)?
+
+  conditions: Listing<SingleCondition|CompositeCondition>?
+
+  params: Mapping<String, Any>?
+
+  url: Uri?
+
+  key: ModuleKeySchema
+}
+
+class `ConnectConfluence:webPanel` {
+  layout: WebPanelLayout?
+
+  tooltip: I18nProperty?
+
+  name: I18nProperty?
+
+  weight: Int?
+
+  location: String(length <= 100)?
+
+  cacheable: Boolean?
+
+  supportsNative: Boolean?
+
+  conditions: Listing<SingleCondition|CompositeCondition>?
+
+  params: Mapping<String, Any>?
+
+  url: Uri?
+
+  key: ModuleKeySchema
+}
+
+class `ConnectConfluence:webhook` {
+  filter: String(length <= 10000)?
+
+  excludeBody: Boolean?
+
+  event: String(length <= 100)?
+
+  conditions: Listing<CompositeCondition|SingleCondition>?
+
+  propertyKeys: Listing<String>?
+
+  url: String?
+
+  key: ModuleKeySchema
+}
+
+class `ConnectConfluence:generalPage` {
+  icon: Icon?
+
+  name: I18nProperty?
+
+  weight: Int?
+
+  cacheable: Boolean?
+
+  location: String(length <= 100)?
+
+  conditions: Listing<CompositeCondition|SingleCondition>?
+
+  params: Mapping<String, Any>?
+
+  url: Uri?
+
+  key: ModuleKeySchema
+}
+
+class `ConnectConfluence:webSection` {
+  tooltip: I18nProperty?
+
+  name: I18nProperty?
+
+  weight: Int?
+
+  location: String(length <= 100)?
+
+  conditions: Listing<CompositeCondition|SingleCondition>?
+
+  params: Mapping<String, Any>?
+
+  key: ModuleKeySchema
+}
+
+class `ConnectConfluence:webItem` {
+  styleClasses: Listing<String(length <= 1000, matches(Regex("^[_a-zA-Z]+[_a-zA-Z0-9-]*$")))>?
+
+  tooltip: I18nProperty?
+
+  icon: Icon?
+
+  weight: Int?
+
+  params: Mapping<String, Any>?
+
+  url: String?
+
+  /// Web Item Target
+  ///
+  ///
+  ///
+  /// Defines the way a <a href="../web-item/">web item</a> link is opened in the browser, such as in a
+  /// modal or inline dialog.
+  ///
+  /// <h2>Inline Dialog Example</h2>
+  ///
+  ///
+  ///
+  ///
+  ///
+  /// { "target": { "type": "inlinedialog", "options": { "onHover": true, "offsetX": "30px", "offsetY":
+  /// "20px" } } }
+  ///
+  ///
+  ///
+  /// <h2>Dialog Example</h2>
+  ///
+  ///
+  ///
+  ///
+  ///
+  /// { "target": { "type": "dialog", "options": { "height": "100px", "width": "200px" } } }
+  ///
+  ///
+  ///
+  /// <h2>Common Dialog Module Example</h2>
+  ///
+  ///
+  ///
+  ///
+  ///
+  /// { "target": { "type": "dialogmodule", "options": { "key": "dialog-module-key" } } }
+  ///
+  ///
+  ///
+  /// <p>More details for this use-case can be found on the <a href="../dialog/">Dialog Module</a>
+  /// page.</p>
+  target: Target?
+
+  context: ("page"|"PAGE"|"addon"|"ADDON"|"product"|"PRODUCT")?
+
+  name: I18nProperty?
+
+  location: String(length <= 100)?
+
+  cacheable: Boolean?
+
+  conditions: Listing<SingleCondition|ConditionAlternate1>?
+
+  key: ModuleKeySchema
+}
+
+/// Web Item Target
+///
+///
+///
+/// Defines the way a <a href="../web-item/">web item</a> link is opened in the browser, such as in a
+/// modal or inline dialog.
+///
+/// <h2>Inline Dialog Example</h2>
+///
+///
+///
+///
+///
+/// { "target": { "type": "inlinedialog", "options": { "onHover": true, "offsetX": "30px", "offsetY":
+/// "20px" } } }
+///
+///
+///
+/// <h2>Dialog Example</h2>
+///
+///
+///
+///
+///
+/// { "target": { "type": "dialog", "options": { "height": "100px", "width": "200px" } } }
+///
+///
+///
+/// <h2>Common Dialog Module Example</h2>
+///
+///
+///
+///
+///
+/// { "target": { "type": "dialogmodule", "options": { "key": "dialog-module-key" } } }
+///
+///
+///
+/// <p>More details for this use-case can be found on the <a href="../dialog/">Dialog Module</a>
+/// page.</p>
+class Target {
+  options: (OptionsAlternate0|OptionsAlternate1|DialogOptions)?
+
+  type: ("page"|"PAGE"|"dialog"|"DIALOG"|"inlinedialog"|"INLINEDIALOG"|"dialogmodule"|"DIALOGMODULE")?
+}
+
+/// Inline Dialog Options
+///
+///
+///
+/// Options for an inline dialog target
+///
+/// <h3>Example</h3>
+///
+///
+///
+///
+///
+/// { "target": { "type": "inlinedialog", "options": { "onHover": true, "offsetX": "30px", "offsetY":
+/// "20px" } } }
+class OptionsAlternate0 {
+  offsetX: String(length <= 10)?
+
+  offsetY: String(length <= 10)?
+
+  width: String(length <= 10)?
+
+  onTop: Boolean?
+
+  showDelay: Int?
+
+  closeOthers: Boolean?
+
+  persistent: Boolean?
+
+  onHover: Boolean?
+
+  isRelativeToMouse: Boolean?
+}
+
+/// Dialog Module Options
+///
+///
+///
+/// Options for a web-item targeting a common <a href="../dialog/">dialog module</a>.
+///
+/// <h3>Example</h3>
+///
+///
+///
+///
+///
+/// { "target": { "type": "dialogmodule", "options": { "key": "dialog-module-key" } } }
+class OptionsAlternate1 {
+  key: String(length <= 100)
+}
+
+/// Dialog Options
+///
+///
+///
+/// Options for a modal dialog <a href="../web-item-target/">web item target</a> or <a
+/// href="../dialog/">common module</a>.
+///
+/// <p> These options are a subset of those available via the <a href="../../jsapi/dialog/">JavaScript
+/// API</a>. </p>
+///
+/// <h2>Web Item Example</h2>
+///
+///
+///
+///
+///
+/// { "target": { "type": "dialog", "options": { "height": "100px", "width": "200px" } } }
+///
+///
+///
+/// <h2>Dialog Example</h2>
+///
+///
+///
+///
+///
+/// { "modules": { "dialogs": [ { "url": "/my-dialog-content", "options": { "size": "fullscreen",
+/// "header": { "value": "Example Dialog" } }, "key": "dialog-module-key" } ] } }
+class DialogOptions {
+  size: (
+    "small"
+    |"SMALL"
+    |"medium"
+    |"MEDIUM"
+    |"large"
+    |"LARGE"
+    |"x-large"
+    |"X-LARGE"
+    |"fullscreen"
+    |"FULLSCREEN"
+    |"maximum"
+    |"MAXIMUM")?
+
+  chrome: Boolean?
+
+  width: String(length <= 10)?
+
+  header: I18nProperty?
+
+  height: String(length <= 10)?
+}
+
+/// Single Condition
+///
+///
+///
+/// Single Conditions are either provided by the host application. See the complete documentation of
+/// [Conditions](../../conditions/) for more information.
+///
+/// To invert a condition, add the attribute ``invert="true"`` to the condition element. This is useful
+/// where you want to show the section if a certain condition is not satisfied.
+///
+/// <h3>Example</h3>
+///
+///
+///
+///
+///
+/// { "condition": "user_is_logged_in", "invert": false }
+class SingleCondition {
+  condition: String(length <= 100)
+
+  invert: Boolean?
+
+  params: Mapping<String, Any>?
+}
+
+/// Composite Condition
+///
+///
+///
+/// Composite Conditions are composed of a collection of [Single Condition](../single-condition/) /
+/// Composite Conditions and a type attribute.
+///
+/// <h3>Example</h3>
+///
+///
+///
+///
+///
+/// { "conditions": [ { "or": [ { "condition": "can_attach_file_to_issue", "invert": false }, {
+/// "condition": "is_issue_assigned_to_current_user", "invert": false } ] }, { "condition":
+/// "user_is_logged_in", "invert": false } ] }
+class ConditionAlternate1 {
+  conditions: Listing<CompositeCondition|SingleCondition>?
+
+  type: ("and"|"AND"|"or"|"OR")?
+}
+
+/// Composite Condition
+///
+///
+///
+/// Composite Conditions are composed of a collection of [Single Condition](../single-condition/) /
+/// Composite Conditions and a type attribute.
+///
+/// <h3>Example</h3>
+///
+///
+///
+///
+///
+/// { "conditions": [ { "or": [ { "condition": "can_attach_file_to_issue", "invert": false }, {
+/// "condition": "is_issue_assigned_to_current_user", "invert": false } ] }, { "condition":
+/// "user_is_logged_in", "invert": false } ] }
+class CompositeCondition {
+  conditions: Listing<Mapping<String, Any>|SingleCondition>?
+
+  type: ("and"|"AND"|"or"|"OR")?
+}
+
+class `ConnectConfluence:dialog` {
+  options: DialogOptions?
+
+  cacheable: Boolean?
+
+  url: String?
+
+  key: ModuleKeySchema
+}
+
+class `ConnectJira:jiraEntityProperty` {
+  entityType: ("issue"|"ISSUE"|"user"|"USER"|"project"|"PROJECT")?
+
+  name: I18nProperty?
+
+  keyConfigurations: Listing<KeyConfiguration>?
+
+  key: ModuleKeySchema
+}
+
+/// Index Key Configuration
+///
+///
+///
+/// Defines the list of extractors which index selected JSON objects from defined property.
+///
+/// <p><b>Example</b></p>
+///
+///
+///
+///
+///
+/// { "extractions": [ { "objectName": "attachment.size", "type": "number" } ], "propertyKey":
+/// "attachment" }
+class KeyConfiguration {
+  propertyKey: String
+
+  extractions: Listing<Extraction>
+}
+
+/// Property Index
+///
+///
+///
+/// Defines an entity property to be indexed by Jira. An entity property is a reference to a JSON object,
+/// which also defines it's type. <p><b>Example</b></p>
+///
+///
+///
+///
+///
+/// { "objectName": "attachment.size", "type": "number", "alias": "attachmentSize" }
+class Extraction {
+  objectName: String
+
+  alias: String?
+
+  type: "number"|"NUMBER"|"text"|"TEXT"|"string"|"STRING"|"user"|"USER"|"date"|"DATE" = Undefined()
+}
+
+class `ConnectJira:jiraFeatureFlagInfoProvider` {
+  homeUrl: String?
+
+  documentationUrl: String?
+
+  name: I18nProperty?
+
+  actions: FeatureFlagProviderActionsBean?
+
+  logoUrl: String?
+
+  key: ModuleKeySchema
+}
+
+class `ConnectJira:jiraProjectPermission` {
+  name: I18nProperty?
+
+  description: I18nProperty?
+
+  category: (
+    "projects"
+    |"PROJECTS"
+    |"issues"
+    |"ISSUES"
+    |"voters_and_watchers"
+    |"VOTERS_AND_WATCHERS"
+    |"comments"
+    |"COMMENTS"
+    |"attachments"
+    |"ATTACHMENTS"
+    |"time_tracking"
+    |"TIME_TRACKING"
+    |"other"
+    |"OTHER")?
+
+  conditions: Listing<SingleCondition|CompositeCondition>?
+
+  key: ModuleKeySchema
+}
+
+class `ConnectJira:jiraProjectPage` {
+  name: I18nProperty?
+
+  weight: Int?
+
+  iconUrl: Uri?
+
+  conditions: Listing<SingleCondition|CompositeCondition>?
+
+  url: Uri?
+
+  key: ModuleKeySchema
+}
+
+class `ConnectJira:jiraSearchRequestView` {
+  name: I18nProperty?
+
+  weight: Int?
+
+  description: I18nProperty?
+
+  conditions: Listing<CompositeCondition|SingleCondition>?
+
+  params: Mapping<String, Any>?
+
+  url: String?
+
+  key: ModuleKeySchema
+}
+
+class `ConnectJira:jiraIssueGlance` {
+  icon: Icon?
+
+  name: I18nProperty?
+
+  conditions: Listing<SingleCondition|CompositeCondition>?
+
+  content: (ContentAlternate0)?
+
+  /// Issue Glance Target Web Panel
+  ///
+  ///
+  ///
+  /// Describes the target of the issue glance module. This supports displaying a web panel in the
+  /// context area of the issue.
+  target: Target?
+
+  jiraNativeAppsEnabled: Boolean?
+
+  key: ModuleKeySchema
+}
+
+/// Issue Glance Content Label
+///
+///
+///
+/// Describes the content for the issue glance module. It specifies static text to show inside the
+/// glance, which is left-aligned next to the icon.
+class ContentAlternate0 {
+  label: I18nProperty
+
+  type: "label"|"LABEL" = Undefined()
+}
+
+/// Issue Glance Target Web Panel
+///
+///
+///
+/// Describes the target of the issue glance module. This supports displaying a web panel in the context
+/// area of the issue.
+class Target {
+  type: "web_panel"|"WEB_PANEL" = Undefined()
+
+  url: Uri
+}
+
+class `ConnectJira:jiraProjectTabPanel` {
+  name: I18nProperty?
+
+  weight: Int?
+
+  conditions: Listing<ConditionAlternate0|SingleCondition>?
+
+  params: Mapping<String, Any>?
+
+  url: Uri?
+
+  key: ModuleKeySchema
+}
+
+/// Composite Condition
+///
+///
+///
+/// Composite Conditions are composed of a collection of [Single Condition](../single-condition/) /
+/// Composite Conditions and a type attribute.
+///
+/// <h3>Example</h3>
+///
+///
+///
+///
+///
+/// { "conditions": [ { "or": [ { "condition": "can_attach_file_to_issue", "invert": false }, {
+/// "condition": "is_issue_assigned_to_current_user", "invert": false } ] }, { "condition":
+/// "user_is_logged_in", "invert": false } ] }
+class ConditionAlternate0 {
+  conditions: Listing<SingleCondition|ConditionAlternate1>?
+
+  type: ("and"|"AND"|"or"|"OR")?
+}
+
+/// Composite Condition
+///
+///
+///
+/// Composite Conditions are composed of a collection of [Single Condition](../single-condition/) /
+/// Composite Conditions and a type attribute.
+///
+/// <h3>Example</h3>
+///
+///
+///
+///
+///
+/// { "conditions": [ { "or": [ { "condition": "can_attach_file_to_issue", "invert": false }, {
+/// "condition": "is_issue_assigned_to_current_user", "invert": false } ] }, { "condition":
+/// "user_is_logged_in", "invert": false } ] }
+class ConditionAlternate1 {
+  conditions: Listing<SingleCondition|Mapping<String, Any>>?
+
+  type: ("and"|"AND"|"or"|"OR")?
+}
+
+class `ConnectJira:jiraBuildInfoProvider` {
+  homeUrl: String?
+
+  documentationUrl: String?
+
+  name: I18nProperty?
+
+  ///
+  ///
+  /// <p>Build actions that can be performed by Jira users.</p> <p>Currently there are no actions defined
+  /// for build providers. Please contact us if you need any.</p>
+  actions: Actions?
+
+  logoUrl: String?
+
+  key: ModuleKeySchema
+}
+
+///
+///
+/// <p>Build actions that can be performed by Jira users.</p> <p>Currently there are no actions defined
+/// for build providers. Please contact us if you need any.</p>
+class Actions {
+
+}
+
+class `ConnectJira:jiraWorkflowCondition` {
+  view: Url?
+
+  expression: String?
+
+  edit: Url?
+
+  evaluationContext: ("user"|"USER"|"app"|"APP")?
+
+  name: I18nProperty?
+
+  description: I18nProperty?
+
+  create: Url?
+
+  key: ModuleKeySchema
+}
+
+class `ConnectJira:jiraProjectAdminTabPanel` {
+  name: I18nProperty?
+
+  weight: Int?
+
+  location: String?
+
+  conditions: Listing<SingleCondition|CompositeCondition>?
+
+  params: Mapping<String, Any>?
+
+  url: Uri?
+
+  key: ModuleKeySchema
+}
+
+class `ConnectJira:jiraWorkflowValidator` {
+  view: Url?
+
+  expression: String?
+
+  edit: Url?
+
+  evaluationContext: ("user"|"USER"|"app"|"APP")?
+
+  errorMessage: (ErrorMessageAlternate0|I18nProperty)?
+
+  name: I18nProperty?
+
+  description: I18nProperty?
+
+  create: Url?
+
+  key: ModuleKeySchema
+}
+
+/// Jira Expression Error Message
+///
+///
+///
+/// A Jira expression that will be evaluated if the workflow validator fails. The string returned by the
+/// Jira expression will be displayed as the error message for the failed transition.
+class ErrorMessageAlternate0 {
+  expression: String
+}
+
+/// i18n Property
+///
+///
+///
+/// Represents a string that can be resolved via a localization properties file. You can use the same
+/// `i18n Property` key and value in multiple places if you like, but identical keys must have identical
+/// values.
+///
+/// <h3>Example</h3>
+///
+///
+///
+///
+///
+/// { "value": "My text" }
+class I18nProperty {
+  value: String(length <= 1500)
+
+  i18n: String(length <= 300)?
+}
+
+class `ConnectJira:jiraRemoteLinkInfoProvider` {
+  homeUrl: String?
+
+  documentationUrl: Uri?
+
+  name: I18nProperty?
+
+  actions: Listing<Action>?
+
+  logoUrl: String?
+
+  key: ModuleKeySchema
+}
+
+///
+///
+/// <p>Defines the Remote Link action that can be invoked.</p>
+class Action {
+  actionId: String
+
+  ///
+  actionLabel: ActionLabel
+
+  templateUrl: Uri
+}
+
+///
+class ActionLabel {
+  value: I18nProperty
+}
+
+class `ConnectJira:jiraBackgroundScript` {
+  location: (LocationAlternate0|LocationAlternate1)?
+
+  url: Uri?
+
+  key: ModuleKeySchema
+}
+
+/// Dashboard Background Script Location
+///
+///
+///
+/// Describes the location of the dashboard background script module.
+class LocationAlternate0 {
+  type: "issue_view"|"ISSUE_VIEW"|"dashboard"|"DASHBOARD" = Undefined()
+}
+
+/// Issue Background Script Location
+///
+///
+///
+/// Describes the location of the issue background script module.
+class LocationAlternate1 {
+  type: "issue_view"|"ISSUE_VIEW"|"dashboard"|"DASHBOARD" = Undefined()
+
+  shouldReloadOnRefresh: Boolean?
+}
+
+class `ConnectJira:jiraDeploymentInfoProvider` {
+  homeUrl: String?
+
+  documentationUrl: String?
+
+  name: I18nProperty?
+
+  ///
+  ///
+  /// <p>Deployment actions that can be performed by Jira users.</p> <p>Each action is optional (unless
+  /// indicated otherwise). The absence of an action indicates that the action is not supported by the
+  /// provider.</p>
+  actions: Actions?
+
+  logoUrl: String?
+
+  key: ModuleKeySchema
+}
+
+///
+///
+/// <p>Deployment actions that can be performed by Jira users.</p> <p>Each action is optional (unless
+/// indicated otherwise). The absence of an action indicates that the action is not supported by the
+/// provider.</p>
+class Actions {
+  ///
+  ///
+  /// <p>Defines the URL template that is used when an action is invoked. The following context
+  /// parameters are supported: <code>{issue.key}</code>, <code>{issue.summary}</code>,
+  /// <code>{issue.deployments}</code>.</p>
+  listDeployments: ListDeployments?
+}
+
+///
+///
+/// <p>Defines the URL template that is used when an action is invoked. The following context parameters
+/// are supported: <code>{issue.key}</code>, <code>{issue.summary}</code>,
+/// <code>{issue.deployments}</code>.</p>
+class ListDeployments {
+  templateUrl: String
+}
+
+class `ConnectJira:jiraReport` {
+  name: I18nProperty?
+
+  description: I18nProperty?
+
+  reportCategory: (
+    "agile"
+    |"AGILE"
+    |"issue_analysis"
+    |"ISSUE_ANALYSIS"
+    |"forecast_management"
+    |"FORECAST_MANAGEMENT"
+    |"other"
+    |"OTHER")?
+
+  url: Uri?
+
+  thumbnailUrl: Uri?
+
+  key: ModuleKeySchema
+}
+
+class `ConnectJira:jiraIssueContext` {
+  icon: Icon?
+
+  name: I18nProperty?
+
+  conditions: Listing<SingleCondition|CompositeCondition>?
+
+  content: (ContentAlternate0)?
+
+  target: (TargetAlternate0)?
+
+  jiraNativeAppsEnabled: Boolean?
+
+  key: ModuleKeySchema
+}
+
+/// Issue Context Content Label
+///
+///
+///
+/// Describes the content for the issue context module. It specifies static text to show inside the
+/// context panel, which is left-aligned next to the icon.
+class ContentAlternate0 {
+  label: I18nProperty
+
+  type: "label"|"LABEL" = Undefined()
+}
+
+/// Issue Context Target Web Panel
+///
+///
+///
+/// Describes the target of the issue context module. This supports displaying a web panel in the context
+/// area of the issue.
+class TargetAlternate0 {
+  type: "web_panel"|"WEB_PANEL" = Undefined()
+
+  url: Uri
+}
+
+class `ConnectJira:jiraDashboardItem` {
+  name: I18nProperty?
+
+  description: I18nProperty?
+
+  conditions: Listing<SingleCondition|CompositeCondition>?
+
+  url: Uri?
+
+  configurable: Boolean?
+
+  refreshable: Boolean?
+
+  thumbnailUrl: Uri?
+
+  key: ModuleKeySchema
+}
+
+class `ConnectJira:jiraWorkflowPostFunction` {
+  view: Url?
+
+  triggered: Url?
+
+  edit: Url?
+
+  name: I18nProperty?
+
+  description: I18nProperty?
+
+  create: Url?
+
+  key: ModuleKeySchema
+}
+
+class `ConnectJira:jiraIssueContent` {
+  icon: Icon?
+
+  tooltip: I18nProperty?
+
+  name: I18nProperty?
+
+  conditions: Listing<SingleCondition|CompositeCondition>?
+
+  /// Issue Page Target Web Panel
+  ///
+  ///
+  ///
+  /// Describes the target of the issue content module. Supports displaying a web panel in the content
+  /// area of the issue view.
+  target: Target?
+
+  contentPresentConditions: Listing<CompositeCondition|SingleCondition>?
+
+  jiraNativeAppsEnabled: Boolean?
+
+  key: ModuleKeySchema
+}
+
+/// Issue Page Target Web Panel
+///
+///
+///
+/// Describes the target of the issue content module. Supports displaying a web panel in the content area
+/// of the issue view.
+class Target {
+  type: "web_panel"|"WEB_PANEL" = Undefined()
+
+  url: Uri
+}
+
+class `ConnectJira:jiraDevelopmentTool` {
+  capabilities: Listing<"commit"|"COMMIT"|"branch"|"BRANCH"|"pull_request"|"PULL_REQUEST">?
+
+  application: I18nProperty?
+
+  name: I18nProperty?
+
+  actions: DevelopmentToolModuleActionsBean?
+
+  url: String?
+
+  logoUrl: String?
+
+  key: ModuleKeySchema
+}
+
+class `ConnectJira:jiraGlobalPermission` {
+  defaultGrants: Listing<"none"|"NONE"|"jira-administrators"|"JIRA-ADMINISTRATORS"|"all"|"ALL">?
+
+  name: I18nProperty?
+
+  description: I18nProperty?
+
+  anonymousAllowed: Boolean?
+
+  key: ModuleKeySchema
+}
+
+class `ConnectJira:jiraIssueField` {
+  /// Issue Field Template
+  ///
+  ///
+  ///
+  /// Defines the template used to render issue field options in the UI view.
+  template: Template?
+
+  /// Issue Field Property
+  ///
+  ///
+  ///
+  /// Defines an issue property that will store the value for the issue field of the `read_only` type.
+  ///
+  /// <p><b>Example</b></p>
+  ///
+  ///
+  ///
+  ///
+  ///
+  /// { "path": "comments.count", "key": "statistics", "type": "number" }
+  property: Property?
+
+  name: I18nProperty?
+
+  description: I18nProperty?
+
+  type: (
+    "string"
+    |"STRING"
+    |"text"
+    |"TEXT"
+    |"rich_text"
+    |"RICH_TEXT"
+    |"single_select"
+    |"SINGLE_SELECT"
+    |"multi_select"
+    |"MULTI_SELECT"
+    |"number"
+    |"NUMBER"
+    |"read_only"
+    |"READ_ONLY")?
+
+  extractions: Listing<Extraction>?
+
+  key: ModuleKeySchema
+}
+
+/// Issue Field Template
+///
+///
+///
+/// Defines the template used to render issue field options in the UI view.
+class Template {
+  type: "link"|"LINK" = Undefined()
+
+  url: String
+}
+
+/// Issue Field Property
+///
+///
+///
+/// Defines an issue property that will store the value for the issue field of the `read_only` type.
+///
+/// <p><b>Example</b></p>
+///
+///
+///
+///
+///
+/// { "path": "comments.count", "key": "statistics", "type": "number" }
+class Property {
+  path: String
+
+  type: "number"|"NUMBER"|"string"|"STRING"|"date"|"DATE" = Undefined()
+
+  key: String
+}
+
+/// Issue Field Option Property Index
+///
+///
+///
+/// Defines an issue field option property to be indexed by Jira. An option can contain an additional
+/// properties object. In this bean, you can define which properties will be extracted, so that a user
+/// will be able to search for issues which have options set that have a certain property.
+///
+/// <p> Note that `multi_select` fields may have more than one option selected. In that case, properties
+/// from all options are indexed. Each Option's properties should have the same structure to be indexed
+/// properly, i.e. the types of values across all options' properties should not differ. If they do, Jira
+/// will still try to act smart and do the most reasonable thing, but the results are not guaranteed.
+/// </p>
+///
+/// <p><b>Example</b></p>
+///
+///
+///
+///
+///
+/// { "path": "category", "type": "text", "name": "categoryName" }
+class Extraction {
+  path: String
+
+  name: String?
+
+  type: "number"|"NUMBER"|"text"|"TEXT"|"string"|"STRING"|"user"|"USER"|"date"|"DATE" = Undefined()
+}
+
+class `ConnectJira:jiraIssueType` {
+  name: I18nProperty?
+
+  description: I18nProperty?
+
+  type: ("standard"|"STANDARD"|"subtask"|"SUBTASK")?
+
+  key: ModuleKeySchema
+}
+
+class `ConnectJira:jiraTimeTrackingProvider` {
+  adminPageKey: String?
+
+  name: I18nProperty?
+
+  key: ModuleKeySchema
+}
+
+class `ConnectConfluence:lifecycle` {
+  installed: Uri?
+
+  disabled: Uri?
+
+  `dare-migration`: String?
+
+  uninstalled: Uri?
+
+  enabled: Uri?
+
+  key: ModuleKeySchema
+}
+
+class `ConnectConfluence:blueprint` {
+  /// Blueprint Template
+  ///
+  ///
+  ///
+  /// Defines where the blueprint template is located and the context for variable substitution.
+  ///
+  ///
+  ///
+  ///
+  ///
+  /// { "template": { "url": "/blueprints/blueprint.xml", "blueprintContext": { "url":
+  /// "/blueprints/context" } } }
+  template: Template?
+
+  icon: Icon?
+
+  name: I18nProperty?
+
+  description: I18nProperty?
+
+  createResult: ("edit"|"EDIT"|"view"|"VIEW")?
+
+  key: ModuleKeySchema
+}
+
+/// Blueprint Template
+///
+///
+///
+/// Defines where the blueprint template is located and the context for variable substitution.
+///
+///
+///
+///
+///
+/// { "template": { "url": "/blueprints/blueprint.xml", "blueprintContext": { "url":
+/// "/blueprints/context" } } }
+class Template {
+  /// Blueprint Template Context
+  ///
+  ///
+  ///
+  /// Defines the context of the blueprint template.
+  ///
+  ///
+  ///
+  ///
+  ///
+  /// { "template": { "url": "/blueprints/blueprint.xml", "blueprintContext": { "url":
+  /// "/blueprints/context" } } }
+  ///
+  ///
+  ///
+  /// A blueprint template is static - the same template will produce the same Confluence page. To
+  /// produce Confluence pages dynamically (to create a different page for a different user), the
+  /// template needs to use variable substitution to produce the dynamic parts. Variable substitution
+  /// requires the add-on to provide data for substitution. Collectively, this data is called the context
+  /// for substitution.
+  ///
+  /// The context is made up of a list of objects which are retrieved from the context url specified by
+  /// the blueprint context <code>url</code> field in this module descriptor. See <a
+  /// href="#IDENTIFIERFIELD">Properties</a> for the definition of each field in the context.
+  ///
+  /// <h3>Substituting dynamic variables in a blueprint</h3>
+  ///
+  /// Let's say we have a blueprint template module <code>/blueprints/blueprint.xml</code>:
+  /// <pre><code>&lt;h2 id=&quot;static1&quot;&gt;Hello Blueprint&lt;/h2&gt; &lt;h2
+  /// id=&quot;custom1&quot;&gt;&lt;at:var at:name=&quot;ContentPageTitle&quot;/&gt;&lt;/h2&gt; &lt;h2
+  /// id=&quot;custom2&quot;&gt;&lt;at:var at:name=&quot;custom-key1&quot;/&gt;&lt;/h2&gt; &lt;h2
+  /// id=&quot;custom3&quot;&gt;&lt;at:var at:rawxhtml=&quot;true&quot;
+  /// at:name=&quot;custom-key2&quot;/&gt;&lt;/h2&gt; </code></pre>
+  ///
+  /// And an add-on server resource <code>/blueprints/context</code> which returns this JSON response as
+  /// the context:
+  ///
+  ///
+  ///
+  ///
+  ///
+  /// [ { "identifier": "ContentPageTitle", "value": "Unique Page Title 1", "representation": "plain" },
+  /// { "identifier": "custom-key1", "value": "custom value 1", "representation": "plain" }, {
+  /// "identifier": "custom-key2", "value": "<ac:structured-macro ac:name=\"cheese\"
+  /// ac:schema-version=\"1\"/> ", "representation": "storage" } ]
+  ///
+  ///
+  ///
+  /// During blueprint page creation, Confluence sends a POST request to <code>/blueprints/context</code>
+  /// to retrieve the context. The context retrieved is parsed as a JSON array of objects and used in the
+  /// substitute of the variables in the blueprint template above (<code>custom-key1</code>,
+  /// <code>custom-key2</code> are the variables).
+  ///
+  /// The final, variable substituted, storage format will look like this: <pre><code>&lt;h2&gt;Hello
+  /// Blueprint&lt;/h2&gt; &lt;h2&gt;Unique Page Title 1&lt;/h2&gt; &lt;h2&gt;custom value 1&lt;/h2&gt;
+  /// &lt;h2&gt;&lt;ac:structured-macro ac:name=&quot;cheese&quot; ac:schema-version=&quot;1&quot;
+  /// /&gt;&lt;/h2&gt; </code></pre>
+  ///
+  /// This is then used as the Confluence page to be saved to the database and displayed to the user
+  /// according to the <code>createResult</code> field of the blueprint module (see <a
+  /// href="../blueprint-template/">Blueprint Template Module</a>).
+  ///
+  /// An error message appears in the Content Create Dialog if Confluence has any problems accessing the
+  /// blueprint template or context URL (for example if your add-on server failed to respond in 10
+  /// seconds or the JSON returned is invalid). A detailed error and/or stacktrace may be accessible by
+  /// Atlassian support, but the end user will see an error like the one shown here: <img
+  /// src="/cloud/connect/images/confluence-blueprint-context-error.png" alt="Blueprint context error"
+  /// width="80%" style="border:1px solid #999;margin-top:10px;">
+  ///
+  /// <h3 id="BACKWARDSCOMPATIBILITY">Backwards compatibility of the <code>identifier</code> field</h3> A
+  /// blueprint template containing variables may change as the add-on evolves over time. However,
+  /// because end users can customize blueprint templates, it's possible for the customized version of
+  /// the template to differ from the version in the add-on. This difference won't cause an error as long
+  /// as the variables used in the template are still being returned as part of the context url.
+  ///
+  /// Add-ons wanting to retain backwards compatibility for their blueprint templates should ensure that
+  /// any variables used in a template are always returned in the context url, even if a new version of
+  /// the blueprint template no longer uses it (for example if users are relying on an old or customized
+  /// version of the template). This ensures that the template continues to function when the add-on
+  /// updates the template.
+  blueprintContext: BlueprintContext?
+
+  url: Uri
+}
+
+/// Blueprint Template Context
+///
+///
+///
+/// Defines the context of the blueprint template.
+///
+///
+///
+///
+///
+/// { "template": { "url": "/blueprints/blueprint.xml", "blueprintContext": { "url":
+/// "/blueprints/context" } } }
+///
+///
+///
+/// A blueprint template is static - the same template will produce the same Confluence page. To produce
+/// Confluence pages dynamically (to create a different page for a different user), the template needs to
+/// use variable substitution to produce the dynamic parts. Variable substitution requires the add-on to
+/// provide data for substitution. Collectively, this data is called the context for substitution.
+///
+/// The context is made up of a list of objects which are retrieved from the context url specified by the
+/// blueprint context <code>url</code> field in this module descriptor. See <a
+/// href="#IDENTIFIERFIELD">Properties</a> for the definition of each field in the context.
+///
+/// <h3>Substituting dynamic variables in a blueprint</h3>
+///
+/// Let's say we have a blueprint template module <code>/blueprints/blueprint.xml</code>:
+/// <pre><code>&lt;h2 id=&quot;static1&quot;&gt;Hello Blueprint&lt;/h2&gt; &lt;h2
+/// id=&quot;custom1&quot;&gt;&lt;at:var at:name=&quot;ContentPageTitle&quot;/&gt;&lt;/h2&gt; &lt;h2
+/// id=&quot;custom2&quot;&gt;&lt;at:var at:name=&quot;custom-key1&quot;/&gt;&lt;/h2&gt; &lt;h2
+/// id=&quot;custom3&quot;&gt;&lt;at:var at:rawxhtml=&quot;true&quot;
+/// at:name=&quot;custom-key2&quot;/&gt;&lt;/h2&gt; </code></pre>
+///
+/// And an add-on server resource <code>/blueprints/context</code> which returns this JSON response as
+/// the context:
+///
+///
+///
+///
+///
+/// [ { "identifier": "ContentPageTitle", "value": "Unique Page Title 1", "representation": "plain" }, {
+/// "identifier": "custom-key1", "value": "custom value 1", "representation": "plain" }, { "identifier":
+/// "custom-key2", "value": "<ac:structured-macro ac:name=\"cheese\" ac:schema-version=\"1\"/> ",
+/// "representation": "storage" } ]
+///
+///
+///
+/// During blueprint page creation, Confluence sends a POST request to <code>/blueprints/context</code>
+/// to retrieve the context. The context retrieved is parsed as a JSON array of objects and used in the
+/// substitute of the variables in the blueprint template above (<code>custom-key1</code>,
+/// <code>custom-key2</code> are the variables).
+///
+/// The final, variable substituted, storage format will look like this: <pre><code>&lt;h2&gt;Hello
+/// Blueprint&lt;/h2&gt; &lt;h2&gt;Unique Page Title 1&lt;/h2&gt; &lt;h2&gt;custom value 1&lt;/h2&gt;
+/// &lt;h2&gt;&lt;ac:structured-macro ac:name=&quot;cheese&quot; ac:schema-version=&quot;1&quot;
+/// /&gt;&lt;/h2&gt; </code></pre>
+///
+/// This is then used as the Confluence page to be saved to the database and displayed to the user
+/// according to the <code>createResult</code> field of the blueprint module (see <a
+/// href="../blueprint-template/">Blueprint Template Module</a>).
+///
+/// An error message appears in the Content Create Dialog if Confluence has any problems accessing the
+/// blueprint template or context URL (for example if your add-on server failed to respond in 10 seconds
+/// or the JSON returned is invalid). A detailed error and/or stacktrace may be accessible by Atlassian
+/// support, but the end user will see an error like the one shown here: <img
+/// src="/cloud/connect/images/confluence-blueprint-context-error.png" alt="Blueprint context error"
+/// width="80%" style="border:1px solid #999;margin-top:10px;">
+///
+/// <h3 id="BACKWARDSCOMPATIBILITY">Backwards compatibility of the <code>identifier</code> field</h3> A
+/// blueprint template containing variables may change as the add-on evolves over time. However, because
+/// end users can customize blueprint templates, it's possible for the customized version of the template
+/// to differ from the version in the add-on. This difference won't cause an error as long as the
+/// variables used in the template are still being returned as part of the context url.
+///
+/// Add-ons wanting to retain backwards compatibility for their blueprint templates should ensure that
+/// any variables used in a template are always returned in the context url, even if a new version of the
+/// blueprint template no longer uses it (for example if users are relying on an old or customized
+/// version of the template). This ensures that the template continues to function when the add-on
+/// updates the template.
+class BlueprintContext {
+  url: Uri
+}
+
+class `ConnectConfluence:spaceToolsTab` {
+  name: I18nProperty?
+
+  weight: Int?
+
+  location: String(length <= 100)?
+
+  conditions: Listing<CompositeCondition|SingleCondition>?
+
+  params: Mapping<String, Any>?
+
+  url: Uri?
+
+  key: ModuleKeySchema
+}
+
+class `ConnectConfluence:confluenceContentProperty` {
+  name: I18nProperty?
+
+  keyConfigurations: Listing<KeyConfiguration>?
+
+  key: ModuleKeySchema
+}
+
+/// Content Property Index Key Configuration
+///
+///
+///
+/// A Content Property Index Key Configuration defines which values from your JSON content property
+/// object should be indexed by Confluence and made available to the CQL search syntax.
+///
+/// Each content property key will define one or more <a
+/// href="../content-property-index-extraction-configuration/">extractions</a> which will allow for
+/// multiple values from your JSON content property to be used in CQL. Each extraction defines a single
+/// field that will be queryable using the relevant CQL syntax as seen below.
+///
+/// In the <a href="https://bitbucket.org/mjensen/wordcount">wordcount</a> example, we store details of
+/// the page that describe the word and character counts.
+///
+/// After storing this JSON object as a content property:
+///
+/// <pre><code> { "wordCount": 5 "characterCount": 22 } </code></pre>
+///
+/// We then define a series of extractions to allow access to the 'wordCount' and 'characterCount'
+/// properties.
+///
+/// <pre><code> { "propertyKey": "wordcount_addon", "extractions": [ { "objectName": "wordCount", "type":
+/// "number" }, { "objectName": "characterCount", "type": "number" } ] } </code></pre>
+///
+/// You can access this property in your CQL queries as:
+///
+/// <pre><code> space = currentSpace() and content.property[wordcount_addon].wordCount &lt;= 1000
+/// </code></pre>
+///
+/// This is constructed using the following:
+///
+/// <pre><code> content.property[<strong>propertyKey</strong>].<strong>objectName</strong> </code></pre>
+///
+/// You can simplify the CQL syntax even further by defining an alias for the extraction:
+///
+/// <pre><code> { "propertyKey": "wordcount_addon", "extractions": [ { "objectName": "wordCount", "type":
+/// "number", alias: "wordcount" } ] } </code></pre>
+///
+/// This allows you to refer to your data using the alias:
+///
+/// <pre><code> space = currentSpace() and wordcount &lt;= 1000 </code></pre>
+///
+/// <strong>Important:</strong> the <code>alias</code> must also be globally unique. Prefixing it with
+/// the name of your add-on is the best way to ensure this.
+///
+/// <p><b>Example</b></p>
+///
+///
+///
+///
+///
+/// { "propertyKey": "attachment", "extractions": [ { "objectName": "attachment.size", "type": "number"
+/// }, { "objectName": "attachment.type", "type": "string", "alias": "contentType", "uiSupport": {
+/// "defaultOperator": "~", "name": { "value": "Content Type", "i18n": "attachment.type.name" },
+/// "tooltip": { "value": "Content Type Tooltip", "i18n": "attachment.type.tooltip" }, "dataUri":
+/// "/data/content-types", "valueType": "string" } }, { "objectName": "attachment.updated", "type":
+/// "date" } ] }
+class KeyConfiguration {
+  propertyKey: String(length <= 100)
+
+  extractions: Listing<Extraction>
+}
+
+/// Content Property Index Extraction Configuration
+///
+///
+///
+/// An extraction recipe for a single value within a content property JSON object.
+///
+/// An extraction recipe defines which values within your JSON content property will be added to the
+/// search index and made available to CQL queries as a field. This can allow you to track custom
+/// information and make it look like a simple field on the content object.
+///
+/// You can further extend the field definition by including <a href="../user-interface-support/">UI
+/// support</a>.
+///
+/// See the <a href="../content-property-index-key-configuration/">content property key</a> documentation
+/// for a complete example.
+///
+/// <p><b>Example</b></p>
+///
+///
+///
+///
+///
+/// { "objectName": "attachment.type", "type": "string", "alias": "contentType", "uiSupport": {
+/// "defaultOperator": "~", "name": { "value": "Content Type", "i18n": "attachment.type.name" },
+/// "tooltip": { "value": "Content Type Tooltip", "i18n": "attachment.type.tooltip" }, "dataUri":
+/// "/data/content-types", "valueType": "string" } }
+class Extraction {
+  uiSupport: UiSupport?
+
+  objectName: String(length <= 1000)
+
+  alias: String?
+
+  type: "number"|"NUMBER"|"string"|"STRING"|"text"|"TEXT"|"date"|"DATE" = Undefined()
+}
+
+class `ConnectConfluence:customContent` {
+  uiSupport: CustomContentUISupport?
+
+  name: I18nProperty?
+
+  description: I18nProperty?
+
+  apiSupport: ApiSupport?
+
+  key: ModuleKeySchema
+}
+
+class `ConnectConfluence:dynamicContentMacro` {
+  bodyType: ("rich-text"|"RICH-TEXT"|"plain-text"|"PLAIN-TEXT"|"none"|"NONE")?
+
+  /// Macro Editor
+  ///
+  ///
+  ///
+  /// Macro Parameters go a long way when it comes to macro configuration, but there are cases when a
+  /// macro add-on needs more control over the UI.
+  ///
+  /// Defining a Macro Editor allows you to implement a custom UI for the macro, by specifying a URL to a
+  /// page in your add-on which will be shown in the dialog iFrame.
+  ///
+  /// In order to persist custom data in your macro editor, use the Javascript [Confluence
+  /// API](../../jsapi/confluence/) and the [Dialog API](../../jsapi/dialog/). For example:
+  ///
+  /// AP.require(["confluence", "dialog"], function (confluence, dialog) { function onSubmit() { var
+  /// macroParams = { myParameter: value }; confluence.saveMacro(macroParams);
+  /// confluence.closeMacroEditor(); return true; }
+  ///
+  /// dialog.getButton("submit").bind(onSubmit); });
+  ///
+  /// In order to retrieve the custom data again when the editor is opened, use `confluence.getMacroData`
+  /// (see [Confluence API](../../jsapi/confluence/)):
+  ///
+  /// AP.require("confluence", function (confluence) { var macroData =
+  /// confluence.getMacroData(function(macroParams) { doSomethingWith(macroParams.myParameter); }); });
+  ///
+  /// <p><b>Example</b></p>
+  ///
+  ///
+  ///
+  ///
+  ///
+  /// { "editor": { "url": "/map-editor", "editTitle": { "value": "Edit Map" }, "insertTitle": { "value":
+  /// "Insert Map" } } }
+  editor: Editor?
+
+  featured: Boolean?
+
+  aliases: Listing<String(length <= 100)>?
+
+  `hidden`: Boolean?
+
+  /// Macro Render Modes
+  ///
+  ///
+  ///
+  /// Allows your dynamic content macro to provide different static macro implementations for different
+  /// render modes.
+  ///
+  /// Dynamic Content Macros can include style sheets and javascript, allowing the development of rich
+  /// interactive applications. When your macro is rendered in a web browser this can provide a modern,
+  /// interactive web experience.
+  ///
+  /// When your macro is rendered to static formats such as PDF, or word, these interactive modes are
+  /// often undesirable, or technically impossible.
+  ///
+  /// Macro Render Modes allow you to map a render mode to a static content macro. This allows you to
+  /// provide an implementation of your macro for these formats, that will render safely to static
+  /// formats.
+  ///
+  /// <p><b>Example</b></p>
+  ///
+  ///
+  ///
+  ///
+  ///
+  /// { "modules": { "dynamicContentMacros": [ { "renderModes": { "pdf": { "url": "/render-map-pdf" },
+  /// "default": { "url": "/render-map-static" } }, "url": "/render-map?pageTitle={page.title}",
+  /// "categories": [], "outputType": "block", "bodyType": "none", "aliases": [], "name": { "value":
+  /// "Maps" }, "key": "dynamic-macro-example" } ] } }
+  renderModes: RenderModes?
+
+  documentation: Link?
+
+  icon: Icon?
+
+  description: I18nProperty?
+
+  outputType: ("block"|"BLOCK"|"inline"|"INLINE")?
+
+  url: Uri?
+
+  /// Macro Property Panel
+  ///
+  ///
+  ///
+  /// Defining a Macro Property panel allows you to add a hidden iframe to your macro's property panel.
+  /// The iframe is loaded as soon as the property panel is opened.
+  ///
+  /// In order to persist custom data using your property panel, use the Javascript <a
+  /// href="../../jsapi/confluence/">Confluence API</a>. For example:
+  ///
+  /// AP.require(["confluence"], function (confluence) { var macroParams = { myParameter: value };
+  /// confluence.saveMacro(macroParams); });
+  ///
+  /// In order to retrieve the custom data again when the property panel is opened, use
+  /// `confluence.getMacroData` (see <a href="../../jsapi/confluence/">Confluence API</a>):
+  ///
+  /// AP.require("confluence", function (confluence) { var macroData =
+  /// confluence.getMacroData(function(macroParams) { doSomethingWith(macroParams.myParameter); }); });
+  ///
+  /// Dialogs may also be created. Use `dialog.create` (see <a href="../../jsapi/dialog/">Dialog
+  /// API</a>):
+  ///
+  /// AP.require('dialog', function(dialog) { dialog.create({ key: 'my-module-key', width: '500px',
+  /// height: '200px', chrome: true }).on("close", callbackFunc); });
+  propertyPanel: PropertyPanel?
+
+  autoconvert: Autoconvert?
+
+  imagePlaceholder: ImagePlaceholder?
+
+  ///
+  ///
+  /// Defines what a dynamic content macro can consume and produce to interoperate with other macros.
+  ///
+  ///
+  ///
+  ///
+  ///
+  /// { "inputType": "table", "outputType": "chart" }
+  ///
+  ///
+  ///
+  /// <p>This is useful to chain multiple macros with each other. For example a macro can provide adf
+  /// table data which can be used to produce a chart with it.</p>
+  refDataSchema: RefDataSchema?
+
+  width: String(length <= 10)?
+
+  name: I18nProperty?
+
+  cacheable: Boolean?
+
+  categories: Listing<String(length <= 100)>?
+
+  parameters: Listing<Parameter>?
+
+  height: String(length <= 10)?
+
+  key: ModuleKeySchema
+}
+
+/// Macro Editor
+///
+///
+///
+/// Macro Parameters go a long way when it comes to macro configuration, but there are cases when a macro
+/// add-on needs more control over the UI.
+///
+/// Defining a Macro Editor allows you to implement a custom UI for the macro, by specifying a URL to a
+/// page in your add-on which will be shown in the dialog iFrame.
+///
+/// In order to persist custom data in your macro editor, use the Javascript [Confluence
+/// API](../../jsapi/confluence/) and the [Dialog API](../../jsapi/dialog/). For example:
+///
+/// AP.require(["confluence", "dialog"], function (confluence, dialog) { function onSubmit() { var
+/// macroParams = { myParameter: value }; confluence.saveMacro(macroParams);
+/// confluence.closeMacroEditor(); return true; }
+///
+/// dialog.getButton("submit").bind(onSubmit); });
+///
+/// In order to retrieve the custom data again when the editor is opened, use `confluence.getMacroData`
+/// (see [Confluence API](../../jsapi/confluence/)):
+///
+/// AP.require("confluence", function (confluence) { var macroData =
+/// confluence.getMacroData(function(macroParams) { doSomethingWith(macroParams.myParameter); }); });
+///
+/// <p><b>Example</b></p>
+///
+///
+///
+///
+///
+/// { "editor": { "url": "/map-editor", "editTitle": { "value": "Edit Map" }, "insertTitle": { "value":
+/// "Insert Map" } } }
+class Editor {
+  insertTitle: I18nProperty?
+
+  editTitle: I18nProperty?
+
+  width: String(length <= 10)?
+
+  cacheable: Boolean?
+
+  url: Uri
+
+  height: String(length <= 10)?
+}
+
+/// Macro Render Modes
+///
+///
+///
+/// Allows your dynamic content macro to provide different static macro implementations for different
+/// render modes.
+///
+/// Dynamic Content Macros can include style sheets and javascript, allowing the development of rich
+/// interactive applications. When your macro is rendered in a web browser this can provide a modern,
+/// interactive web experience.
+///
+/// When your macro is rendered to static formats such as PDF, or word, these interactive modes are often
+/// undesirable, or technically impossible.
+///
+/// Macro Render Modes allow you to map a render mode to a static content macro. This allows you to
+/// provide an implementation of your macro for these formats, that will render safely to static formats.
+///
+/// <p><b>Example</b></p>
+///
+///
+///
+///
+///
+/// { "modules": { "dynamicContentMacros": [ { "renderModes": { "pdf": { "url": "/render-map-pdf" },
+/// "default": { "url": "/render-map-static" } }, "url": "/render-map?pageTitle={page.title}",
+/// "categories": [], "outputType": "block", "bodyType": "none", "aliases": [], "name": { "value": "Maps"
+/// }, "key": "dynamic-macro-example" } ] } }
+class RenderModes {
+  default: EmbeddedStaticContentMacroBean?
+
+  pdf: EmbeddedStaticContentMacroBean?
+
+  word: EmbeddedStaticContentMacroBean?
+
+  email: EmbeddedStaticContentMacroBean?
+}
+
+/// Macro Property Panel
+///
+///
+///
+/// Defining a Macro Property panel allows you to add a hidden iframe to your macro's property panel. The
+/// iframe is loaded as soon as the property panel is opened.
+///
+/// In order to persist custom data using your property panel, use the Javascript <a
+/// href="../../jsapi/confluence/">Confluence API</a>. For example:
+///
+/// AP.require(["confluence"], function (confluence) { var macroParams = { myParameter: value };
+/// confluence.saveMacro(macroParams); });
+///
+/// In order to retrieve the custom data again when the property panel is opened, use
+/// `confluence.getMacroData` (see <a href="../../jsapi/confluence/">Confluence API</a>):
+///
+/// AP.require("confluence", function (confluence) { var macroData =
+/// confluence.getMacroData(function(macroParams) { doSomethingWith(macroParams.myParameter); }); });
+///
+/// Dialogs may also be created. Use `dialog.create` (see <a href="../../jsapi/dialog/">Dialog API</a>):
+///
+/// AP.require('dialog', function(dialog) { dialog.create({ key: 'my-module-key', width: '500px', height:
+/// '200px', chrome: true }).on("close", callbackFunc); });
+class PropertyPanel {
+  controls: Listing<Control|ControlAlternate0|ControlAlternate3|ControlAlternate2>?
+
+  cacheable: Boolean?
+
+  url: Uri
+}
+
+/// ButtonControl
+///
+///
+///
+/// Defines a button which may appear in control extension points such as the property panel
+///
+/// <p><b>Example</b></p>
+///
+///
+///
+///
+///
+/// { "type": "button", "label": { "value": "My Custom Control 0" }, "key": "my-custom-control-0" }
+class Control {
+  label: I18nProperty
+
+  type: "button"|"BUTTON" = Undefined()
+
+  key: String(length <= 100, matches(Regex("^[a-zA-Z0-9-]+$")))
+}
+
+/// ToggleGroup
+///
+///
+///
+/// Defines a ToggleGroup which may appear in control extension points such as the property panel
+///
+/// <p><b>Example</b></p>
+///
+///
+///
+///
+///
+/// [ { "type": "togglegroup", "macroParameter": "toggleGroupMacroParameter", "controls": [ { "type":
+/// "togglebutton", "macroParameterValue": "macroParameterValue 0", "label": { "value": "My Custom
+/// Control 0" }, "key": "my-custom-toggle-button-0" }, { "type": "togglebutton", "macroParameterValue":
+/// "macroParameterValue 1", "label": { "value": "My Custom Control 1" }, "key":
+/// "my-custom-toggle-button-1" } ] } ]
+class ControlAlternate0 {
+  controls: Listing<Control>
+
+  macroParameter: String(length <= 100, matches(Regex(#"[-_a-z0-9\.]+"#)))
+
+  type: "togglegroup"|"TOGGLEGROUP" = Undefined()
+}
+
+/// ToggleButtonControl
+///
+///
+///
+/// Defines a toggle button which appears inside a ToggleGroup
+///
+/// <p><b>Example</b></p>
+///
+///
+///
+///
+///
+/// { "type": "togglebutton", "macroParameterValue": "macroParameterValue 0", "label": { "value": "My
+/// Custom Control 0" }, "key": "my-custom-toggle-button-0" }
+class Control {
+  macroParameterValue: String(length <= 10000)
+
+  label: I18nProperty
+
+  type: "togglebutton"|"TOGGLEBUTTON" = Undefined()
+
+  key: String(length <= 100, matches(Regex("^[a-zA-Z0-9-]+$")))
+}
+
+/// ControlGroup
+///
+///
+///
+/// Defines a ControlGroup which may appear in control extension points such as the property panel
+///
+/// <p><b>Example</b></p>
+///
+///
+///
+///
+///
+/// [ { "type": "group", "controls": [ { "type": "button", "label": { "value": "My Custom Control 0" },
+/// "key": "my-custom-control-0" }, { "type": "button", "label": { "value": "My Custom Control 1" },
+/// "key": "my-custom-control-1" } ] } ]
+class ControlAlternate3 {
+  controls: Listing<Control>
+
+  type: "group"|"GROUP" = Undefined()
+}
+
+/// TextControl
+///
+///
+///
+/// Defines a text field which may appear in control extension points such as the property panel
+///
+/// <p><b>Example</b></p>
+///
+///
+///
+///
+///
+/// { "type": "button", "label": { "value": "My Custom Control 0" }, "key": "my-custom-control-0" }
+class ControlAlternate2 {
+  macroParameter: String(length <= 100)
+
+  type: "text"|"TEXT" = Undefined()
+
+  key: String(length <= 100, matches(Regex("^[a-zA-Z0-9-]+$")))
+}
+
+///
+///
+/// Defines what a dynamic content macro can consume and produce to interoperate with other macros.
+///
+///
+///
+///
+///
+/// { "inputType": "table", "outputType": "chart" }
+///
+///
+///
+/// <p>This is useful to chain multiple macros with each other. For example a macro can provide adf table
+/// data which can be used to produce a chart with it.</p>
+class RefDataSchema {
+  outputType: String(length <= 255)?
+
+  inputType: String(length <= 255)?
+}
+
+/// Macro Input Parameter
+///
+///
+///
+/// Describes a parameter input field for a macro.
+///
+/// Any declared parameters must also be included in the URL value of the macro in order to serialise
+/// this value, for example, for a macro with a parameter `view` it should be added to the macro url as
+/// follows:
+///
+/// <pre><code> "dynamicContentMacros": [{ ... "url":
+/// "/render-map?pageTitle={page.title}&amp;viewChoice={view}", ... }] </code></pre>
+///
+/// <h2>Example</h2>
+///
+///
+///
+///
+///
+/// { "dynamicContentMacros": { "renderModes": {}, "url": "/my-macro", "categories": [], "outputType":
+/// "block", "bodyType": "none", "aliases": [], "parameters": [ { "identifier": "view", "name": {
+/// "value": "Map View" }, "description": { "value": "Allows switching between view types" }, "type":
+/// "enum", "required": true, "multiple": false, "defaultValue": "Map", "values": [ "Map", "Satellite" ],
+/// "hidden": false, "indexing": { "enabled": true } } ], "name": { "value": "My macro with placeholder"
+/// }, "key": "my-macro-key" } }
+class Parameter {
+  identifier: String(matches(Regex(#"[-_a-z0-9\.]+"#)))
+
+  aliases: Listing<String(length <= 100)>?
+
+  `hidden`: Boolean?
+
+  indexing: Indexing?
+
+  defaultValue: String(length <= 1000)?
+
+  values: Listing<String(length <= 1000)>?
+
+  name: I18nProperty
+
+  multiple: Boolean?
+
+  description: I18nProperty?
+
+  type: 
+    "attachment"
+    |"ATTACHMENT"
+    |"boolean"
+    |"BOOLEAN"
+    |"confluence-content"
+    |"CONFLUENCE-CONTENT"
+    |"enum"
+    |"ENUM"
+    |"int"
+    |"INT"
+    |"label"
+    |"LABEL"
+    |"spacekey"
+    |"SPACEKEY"
+    |"string"
+    |"STRING"
+    |"url"
+    |"URL"
+    |"username"
+    |"USERNAME" = Undefined()
+
+  required: Boolean?
+}
+
+class `ConnectConfluence:staticContentMacro` {
+  bodyType: ("rich-text"|"RICH-TEXT"|"plain-text"|"PLAIN-TEXT"|"none"|"NONE")?
+
+  /// Macro Editor
+  ///
+  ///
+  ///
+  /// Macro Parameters go a long way when it comes to macro configuration, but there are cases when a
+  /// macro add-on needs more control over the UI.
+  ///
+  /// Defining a Macro Editor allows you to implement a custom UI for the macro, by specifying a URL to a
+  /// page in your add-on which will be shown in the dialog iFrame.
+  ///
+  /// In order to persist custom data in your macro editor, use the Javascript [Confluence
+  /// API](../../jsapi/confluence/) and the [Dialog API](../../jsapi/dialog/). For example:
+  ///
+  /// AP.require(["confluence", "dialog"], function (confluence, dialog) { function onSubmit() { var
+  /// macroParams = { myParameter: value }; confluence.saveMacro(macroParams);
+  /// confluence.closeMacroEditor(); return true; }
+  ///
+  /// dialog.getButton("submit").bind(onSubmit); });
+  ///
+  /// In order to retrieve the custom data again when the editor is opened, use `confluence.getMacroData`
+  /// (see [Confluence API](../../jsapi/confluence/)):
+  ///
+  /// AP.require("confluence", function (confluence) { var macroData =
+  /// confluence.getMacroData(function(macroParams) { doSomethingWith(macroParams.myParameter); }); });
+  ///
+  /// <p><b>Example</b></p>
+  ///
+  ///
+  ///
+  ///
+  ///
+  /// { "editor": { "url": "/map-editor", "editTitle": { "value": "Edit Map" }, "insertTitle": { "value":
+  /// "Insert Map" } } }
+  editor: Editor?
+
+  featured: Boolean?
+
+  aliases: Listing<String(length <= 100)>?
+
+  `hidden`: Boolean?
+
+  documentation: Link?
+
+  icon: Icon?
+
+  description: I18nProperty?
+
+  outputType: ("block"|"BLOCK"|"inline"|"INLINE")?
+
+  url: Uri?
+
+  /// Macro Property Panel
+  ///
+  ///
+  ///
+  /// Defining a Macro Property panel allows you to add a hidden iframe to your macro's property panel.
+  /// The iframe is loaded as soon as the property panel is opened.
+  ///
+  /// In order to persist custom data using your property panel, use the Javascript <a
+  /// href="../../jsapi/confluence/">Confluence API</a>. For example:
+  ///
+  /// AP.require(["confluence"], function (confluence) { var macroParams = { myParameter: value };
+  /// confluence.saveMacro(macroParams); });
+  ///
+  /// In order to retrieve the custom data again when the property panel is opened, use
+  /// `confluence.getMacroData` (see <a href="../../jsapi/confluence/">Confluence API</a>):
+  ///
+  /// AP.require("confluence", function (confluence) { var macroData =
+  /// confluence.getMacroData(function(macroParams) { doSomethingWith(macroParams.myParameter); }); });
+  ///
+  /// Dialogs may also be created. Use `dialog.create` (see <a href="../../jsapi/dialog/">Dialog
+  /// API</a>):
+  ///
+  /// AP.require('dialog', function(dialog) { dialog.create({ key: 'my-module-key', width: '500px',
+  /// height: '200px', chrome: true }).on("close", callbackFunc); });
+  propertyPanel: PropertyPanel?
+
+  autoconvert: Autoconvert?
+
+  imagePlaceholder: ImagePlaceholder?
+
+  renderingMethod: ("get"|"GET"|"post"|"POST")?
+
+  name: I18nProperty?
+
+  categories: Listing<String(length <= 100)>?
+
+  parameters: Listing<Parameter>?
+
+  key: ModuleKeySchema
+}
+
+/// Macro Property Panel
+///
+///
+///
+/// Defining a Macro Property panel allows you to add a hidden iframe to your macro's property panel. The
+/// iframe is loaded as soon as the property panel is opened.
+///
+/// In order to persist custom data using your property panel, use the Javascript <a
+/// href="../../jsapi/confluence/">Confluence API</a>. For example:
+///
+/// AP.require(["confluence"], function (confluence) { var macroParams = { myParameter: value };
+/// confluence.saveMacro(macroParams); });
+///
+/// In order to retrieve the custom data again when the property panel is opened, use
+/// `confluence.getMacroData` (see <a href="../../jsapi/confluence/">Confluence API</a>):
+///
+/// AP.require("confluence", function (confluence) { var macroData =
+/// confluence.getMacroData(function(macroParams) { doSomethingWith(macroParams.myParameter); }); });
+///
+/// Dialogs may also be created. Use `dialog.create` (see <a href="../../jsapi/dialog/">Dialog API</a>):
+///
+/// AP.require('dialog', function(dialog) { dialog.create({ key: 'my-module-key', width: '500px', height:
+/// '200px', chrome: true }).on("close", callbackFunc); });
+class PropertyPanel {
+  controls: Listing<ControlAlternate0|Control|ControlAlternate2|ControlAlternate3>?
+
+  cacheable: Boolean?
+
+  url: Uri
+}
+
+class `ConnectConfluence:contentBylineItem` {
+  context: ("page"|"PAGE"|"addon"|"ADDON"|"product"|"PRODUCT")?
+
+  tooltip: I18nProperty?
+
+  icon: Icon?
+
+  name: I18nProperty?
+
+  cacheable: Boolean?
+
+  conditions: Listing<CompositeCondition|SingleCondition>?
+
+  params: Mapping<String, Any>?
+
+  contentPropertyKey: String(length <= 100, matches(Regex("^[a-zA-Z0-9-]+$")))?
+
+  url: String?
+
+  /// Web Item Target
+  ///
+  ///
+  ///
+  /// Defines the way a <a href="../web-item/">web item</a> link is opened in the browser, such as in a
+  /// modal or inline dialog.
+  ///
+  /// <h2>Inline Dialog Example</h2>
+  ///
+  ///
+  ///
+  ///
+  ///
+  /// { "target": { "type": "inlinedialog", "options": { "onHover": true, "offsetX": "30px", "offsetY":
+  /// "20px" } } }
+  ///
+  ///
+  ///
+  /// <h2>Dialog Example</h2>
+  ///
+  ///
+  ///
+  ///
+  ///
+  /// { "target": { "type": "dialog", "options": { "height": "100px", "width": "200px" } } }
+  ///
+  ///
+  ///
+  /// <h2>Common Dialog Module Example</h2>
+  ///
+  ///
+  ///
+  ///
+  ///
+  /// { "target": { "type": "dialogmodule", "options": { "key": "dialog-module-key" } } }
+  ///
+  ///
+  ///
+  /// <p>More details for this use-case can be found on the <a href="../dialog/">Dialog Module</a>
+  /// page.</p>
+  target: Target?
+
+  key: ModuleKeySchema
+}
+
+class `ConnectConfluence:confluenceTheme` {
+  /// Theme Routes
+  ///
+  ///
+  ///
+  /// Defines each of the routes that the Theme module should override.
+  ///
+  /// The <code>url</code> field of each individual <a href="../theme-route-definition/">route
+  /// definition</a> will be provided with context parameters for the particular route. For example, the
+  /// <code>spaceview</code> route can have as a URL <code>/my-spaceview/{space.key}</code>, and the
+  /// context parameter <code>space.key</code> is going to be replaced with the actual space key of the
+  /// content being viewed.
+  ///
+  /// The context parameters <code>username</code> and <code>userkey</code> will be removed after GDPR
+  /// deprecation period ends.
+  ///
+  /// Below is a list of all possible routes, and the context parameters associated with the route.
+  routes: Routes?
+
+  lookAndFeel: LookAndFeel?
+
+  icon: Icon?
+
+  routeOverride: Boolean?
+
+  name: I18nProperty?
+
+  description: I18nProperty?
+
+  availableGlobally: Boolean?
+
+  key: ModuleKeySchema
+}
+
+/// Theme Routes
+///
+///
+///
+/// Defines each of the routes that the Theme module should override.
+///
+/// The <code>url</code> field of each individual <a href="../theme-route-definition/">route
+/// definition</a> will be provided with context parameters for the particular route. For example, the
+/// <code>spaceview</code> route can have as a URL <code>/my-spaceview/{space.key}</code>, and the
+/// context parameter <code>space.key</code> is going to be replaced with the actual space key of the
+/// content being viewed.
+///
+/// The context parameters <code>username</code> and <code>userkey</code> will be removed after GDPR
+/// deprecation period ends.
+///
+/// Below is a list of all possible routes, and the context parameters associated with the route.
+class Routes {
+  /// Theme Route Definition
+  ///
+  ///
+  ///
+  /// Defines the data required for each individual route.
+  ///
+  /// The <code>url</code> field is a URL that is to be used as an iframe for the full page iframe
+  /// rendered for the route.
+  spaceview: Spaceview?
+}
+
+/// Theme Route Definition
+///
+///
+///
+/// Defines the data required for each individual route.
+///
+/// The <code>url</code> field is a URL that is to be used as an iframe for the full page iframe rendered
+/// for the route.
+class Spaceview {
+  url: Uri
+}
+
+class `Jira:serviceDeskPortalRequestViewPanel` {
+  weight: Int?
+
+  conditions: Listing<SingleCondition|CompositeCondition>?
+
+  url: Uri?
+
+  key: ModuleKeySchema
+}
+
+/// ModuleSchema
+class ModuleSchema {
+  trigger: Listing<TriggerAlternate0|TriggerAlternate1>(!isEmpty)?
+
+  webtrigger: Listing<Webtrigger>(!isEmpty)?
+
+  consumer: Listing<Consumer>(!isEmpty)?
+
+  scheduledTrigger: Listing<ScheduledTriggerAlternate0|ScheduledTriggerAlternate1>(!isEmpty)?
+
+  `function`: Listing<Function>(!isEmpty)?
+
+  migration: Listing<Migration>(!isEmpty)?
+
+  endpoint: Listing<Endpoint>(!isEmpty)?
+
+  remote: Listing<Remote>(!isEmpty)?
+
+  macro: Listing<MacroAlternate0|MacroAlternate1>(!isEmpty)?
+
+  `confluence:contextMenu`: Listing<`Confluence:homepageFeedAlternate0`|`Confluence:contextMenuAlternate1`>(!isEmpty)?
+
+  `confluence:contentAction`: Listing<`Confluence:homepageFeedAlternate0`|`Confluence:homepageFeedAlternate1`>(!isEmpty)?
+
+  `confluence:contentBylineItem`: Listing<`Confluence:contentBylineItemAlternate0`|`Confluence:contentBylineItemAlternate1`>(!isEmpty)?
+
+  `confluence:homepageFeed`: Listing<`Confluence:homepageFeedAlternate0`|`Confluence:homepageFeedAlternate1`>(!isEmpty)?
+
+  `confluence:spacePage`: Listing<`Confluence:spacePageAlternate0`|`Confluence:spacePageAlternate1`>(!isEmpty)?
+
+  `confluence:spaceSettings`: Listing<`Confluence:spaceSettingAlternate0`|`Confluence:spaceSettingAlternate1`>(!isEmpty)?
+
+  `confluence:globalSettings`: Listing<`Confluence:globalSettingAlternate0`|`Confluence:globalSettingAlternate1`>(!isEmpty)?
+
+  `confluence:globalPage`: Listing<`Confluence:globalPageAlternate0`|`Confluence:globalPageAlternate1`>(!isEmpty)?
+
+  `confluence:customContent`: Listing<`Confluence:customContentAlternate0`|`Confluence:customContentAlternate1`>(!isEmpty)?
+
+  `jira:workflowValidator`: Listing<`Jira:workflowValidator`>(!isEmpty)?
+
+  `jira:entityProperty`: Listing<`Jira:entityProperty`>(!isEmpty)?
+
+  `jira:customField`: Listing<`Jira:customFieldAlternate0`|`Jira:customFieldAlternate1`>(!isEmpty)?
+
+  `jira:customFieldType`: Listing<`Jira:customFieldTypeAlternate0`|`Jira:customFieldTypeAlternate1`>(!isEmpty)?
+
+  `jira:issueAction`: Listing<`Jira:issueActivityAlternate0`|`Jira:issueActivityAlternate1`>(!isEmpty)?
+
+  `jira:uiModifications`: Listing<`Jira:uiModification`>(!isEmpty)?
+
+  `jira:issueGlance`: Listing<`Jira:issueContextAlternate0`|`Jira:issueContextAlternate1`>(!isEmpty)?
+
+  `jira:issuePanel`: Listing<`Jira:issuePanelAlternate0`|`Jira:issuePanelAlternate1`>(!isEmpty)?
+
+  `jira:issueActivity`: Listing<`Jira:issueActivityAlternate0`|`Jira:issueActivityAlternate1`>(!isEmpty)?
+
+  `jira:dashboardGadget`: Listing<`Jira:dashboardGadgetAlternate0`|`Jira:dashboardGadgetAlternate1`>(!isEmpty)?
+
+  `jira:adminPage`: Listing<`Jira:adminPageAlternate0`|`Jira:adminPageAlternate1`>(!isEmpty)?
+
+  `jira:projectPage`: Listing<`Jira:projectSettingsPageAlternate0`|`Jira:projectSettingsPageAlternate1`>(!isEmpty)?
+
+  `jira:globalPage`: Listing<`Jira:projectSettingsPageAlternate0`|`Jira:projectSettingsPageAlternate1`>(!isEmpty)?
+
+  `jira:projectSettingsPage`: Listing<`Jira:projectSettingsPageAlternate0`|`Jira:projectSettingsPageAlternate1`>(!isEmpty)?
+
+  `jira:workflowCondition`: Listing<`Jira:workflowCondition`>(!isEmpty)?
+
+  `jira:dashboardBackgroundScript`: Listing<`Jira:dashboardBackgroundScript`>(!isEmpty)?
+
+  `jira:globalPermission`: Listing<`Jira:globalPermission`>(!isEmpty)?
+
+  `jira:projectPermission`: Listing<`Jira:projectPermission`>(!isEmpty)?
+
+  `jira:workflowPostFunction`: Listing<`Jira:workflowPostFunction`>(!isEmpty)?
+
+  `jira:issueContext`: Listing<`Jira:issueContextAlternate0`|`Jira:issueContextAlternate1`>(!isEmpty)?
+
+  `jira:issueViewBackgroundScript`: Listing<`Jira:issueViewBackgroundScript`>(!isEmpty)?
+
+  `jira:jqlFunction`: Listing<`Jira:jqlFunction`>(!isEmpty)?
+
+  `compass:adminPage`: Listing<`Compass:teamPageAlternate0`|`Compass:teamPageAlternate1`>(!isEmpty)?
+
+  `compass:componentPage`: Listing<`Compass:componentPageAlternate0`|`Compass:componentPageAlternate1`>(!isEmpty)?
+
+  `compass:globalPage`: Listing<`Compass:globalPageAlternate0`|`Compass:globalPageAlternate1`>(!isEmpty)?
+
+  `compass:teamPage`: Listing<`Compass:teamPageAlternate0`|`Compass:teamPageAlternate1`>(!isEmpty)?
+
+  `compass:dataProvider`: Listing<`Compass:dataProvider`>(!isEmpty)?
+
+  `jiraServiceManagement:queuePage`: Listing<`JiraServiceManagement:organizationPanelAlternate0`|`JiraServiceManagement:queuePageAlternate1`>(!isEmpty)?
+
+  `jiraServiceManagement:portalRequestDetail`: Listing<
+    `JiraServiceManagement:portalRequestDetailPanelAlternate0`
+    |`JiraServiceManagement:portalRequestDetailPanelAlternate1`>(!isEmpty)?
+
+  `jiraServiceManagement:portalRequestDetailPanel`: Listing<
+    `JiraServiceManagement:portalRequestDetailPanelAlternate0`
+    |`JiraServiceManagement:portalRequestDetailPanelAlternate1`>(!isEmpty)?
+
+  `jiraServiceManagement:organizationPanel`: Listing<
+    `JiraServiceManagement:organizationPanelAlternate0`
+    |`JiraServiceManagement:organizationPanelAlternate1`>(!isEmpty)?
+
+  `jiraServiceManagement:portalFooter`: Listing<`JiraServiceManagement:portalFooterAlternate0`|`JiraServiceManagement:portalSubheaderAlternate1`>(!isEmpty)?
+
+  `jiraServiceManagement:portalHeader`: Listing<`JiraServiceManagement:portalSubheaderAlternate0`|`JiraServiceManagement:portalSubheaderAlternate1`>(!isEmpty)?
+
+  `jiraServiceManagement:portalSubheader`: Listing<`JiraServiceManagement:portalSubheaderAlternate0`|`JiraServiceManagement:portalSubheaderAlternate1`>(!isEmpty)?
+
+  `jiraServiceManagement:portalProfilePanel`: Listing<
+    `JiraServiceManagement:portalProfilePanelAlternate0`
+    |`JiraServiceManagement:portalProfilePanelAlternate1`>(!isEmpty)?
+
+  `jiraServiceManagement:portalUserMenuAction`: Listing<
+    `JiraServiceManagement:portalUserMenuActionAlternate0`
+    |`JiraServiceManagement:portalUserMenuActionAlternate1`>(!isEmpty)?
+
+  `jiraServiceManagement:portalRequestViewAction`: Listing<
+    `JiraServiceManagement:portalRequestViewActionAlternate0`
+    |`JiraServiceManagement:portalRequestViewActionAlternate1`>(!isEmpty)?
+
+  `jiraServiceManagement:portalRequestCreatePropertyPanel`: Listing<
+    `JiraServiceManagement:portalRequestCreatePropertyPanelAlternate0`
+    |`JiraServiceManagement:portalRequestCreatePropertyPanelAlternate1`>(!isEmpty)?
+
+  `jiraServiceManagement:assetsImportType`: Listing<`JiraServiceManagement:assetsImportTypeAlternate0`|`JiraServiceManagement:assetsImportTypeAlternate1`>(!isEmpty)?
+
+  `jiraServiceManagement:assetsSchemaPage`: Listing<`JiraServiceManagement:assetsSchemaPageAlternate0`>(!isEmpty)?
+
+  `bitbucket:repoPullRequestCard`: Listing<`Bitbucket:repoMainMenuPageAlternate0`|`Bitbucket:repoMainMenuPageAlternate1`>(!isEmpty)?
+
+  `bitbucket:repoPullRequestAction`: Listing<`Bitbucket:workspaceSettingsMenuPageAlternate0`|`Bitbucket:workspaceSettingsMenuPageAlternate1`>(!isEmpty)?
+
+  `bitbucket:repoCodeOverviewCard`: Listing<`Bitbucket:repoMainMenuPageAlternate0`|`Bitbucket:repoMainMenuPageAlternate1`>(!isEmpty)?
+
+  `bitbucket:repoCodeOverviewAction`: Listing<`Bitbucket:workspaceSettingsMenuPageAlternate0`|`Bitbucket:workspaceSettingsMenuPageAlternate1`>(!isEmpty)?
+
+  `bitbucket:repoMainMenuPage`: Listing<`Bitbucket:repoMainMenuPageAlternate0`|`Bitbucket:repoMainMenuPageAlternate1`>(!isEmpty)?
+
+  `bitbucket:repoSettingsMenuPage`: Listing<`Bitbucket:workspaceSettingsMenuPageAlternate0`|`Bitbucket:workspaceSettingsMenuPageAlternate1`>(!isEmpty)?
+
+  `bitbucket:workspaceSettingsMenuPage`: Listing<`Bitbucket:workspaceSettingsMenuPageAlternate0`|`Bitbucket:workspaceSettingsMenuPageAlternate1`>(!isEmpty)?
+
+  `bitbucket:mergeCheck`: Listing<`Bitbucket:mergeCheck`>(!isEmpty)?
+
+  `connect-jira:keyboardShortcuts`: Listing<`ConnectConfluence:keyboardShortcut`>(!isEmpty)?
+
+  `connect-jira:adminPages`: Listing<`ConnectConfluence:configurePage`>(!isEmpty)?
+
+  `connect-jira:webPanels`: Listing<`ConnectConfluence:webPanel`>(!isEmpty)?
+
+  `connect-jira:webhooks`: Listing<`ConnectConfluence:webhook`>(!isEmpty)?
+
+  `connect-jira:postInstallPage`: Listing<`ConnectConfluence:generalPage`>(!isEmpty)?
+
+  `connect-jira:webSections`: Listing<`ConnectConfluence:webSection`>(!isEmpty)?
+
+  `connect-jira:generalPages`: Listing<`ConnectConfluence:generalPage`>(!isEmpty)?
+
+  `connect-jira:webItems`: Listing<`ConnectConfluence:webItem`>(!isEmpty)?
+
+  `connect-jira:configurePage`: Listing<`ConnectConfluence:configurePage`>(!isEmpty)?
+
+  `connect-jira:dialogs`: Listing<`ConnectConfluence:dialog`>(!isEmpty)?
+
+  `connect-jira:jiraEntityProperties`: Listing<`ConnectJira:jiraEntityProperty`>(!isEmpty)?
+
+  `connect-jira:jiraFeatureFlagInfoProvider`: Listing<`ConnectJira:jiraFeatureFlagInfoProvider`>(!isEmpty)?
+
+  `connect-jira:jiraProjectPermissions`: Listing<`ConnectJira:jiraProjectPermission`>(!isEmpty)?
+
+  `connect-jira:jiraProjectPages`: Listing<`ConnectJira:jiraProjectPage`>(!isEmpty)?
+
+  `connect-jira:jiraSearchRequestViews`: Listing<`ConnectJira:jiraSearchRequestView`>(!isEmpty)?
+
+  `connect-jira:jiraIssueGlances`: Listing<`ConnectJira:jiraIssueGlance`>(!isEmpty)?
+
+  `connect-jira:jiraIssueTabPanels`: Listing<`ConnectJira:jiraProjectTabPanel`>(!isEmpty)?
+
+  `connect-jira:jiraBuildInfoProvider`: Listing<`ConnectJira:jiraBuildInfoProvider`>(!isEmpty)?
+
+  `connect-jira:jiraWorkflowConditions`: Listing<`ConnectJira:jiraWorkflowCondition`>(!isEmpty)?
+
+  `connect-jira:jiraProjectAdminTabPanels`: Listing<`ConnectJira:jiraProjectAdminTabPanel`>(!isEmpty)?
+
+  `connect-jira:jiraWorkflowValidators`: Listing<`ConnectJira:jiraWorkflowValidator`>(!isEmpty)?
+
+  `connect-jira:jiraRemoteLinkInfoProvider`: Listing<`ConnectJira:jiraRemoteLinkInfoProvider`>(!isEmpty)?
+
+  `connect-jira:jiraBackgroundScripts`: Listing<`ConnectJira:jiraBackgroundScript`>(!isEmpty)?
+
+  `connect-jira:jiraDeploymentInfoProvider`: Listing<`ConnectJira:jiraDeploymentInfoProvider`>(!isEmpty)?
+
+  `connect-jira:jiraReports`: Listing<`ConnectJira:jiraReport`>(!isEmpty)?
+
+  `connect-jira:jiraIssueContexts`: Listing<`ConnectJira:jiraIssueContext`>(!isEmpty)?
+
+  `connect-jira:jiraDashboardItems`: Listing<`ConnectJira:jiraDashboardItem`>(!isEmpty)?
+
+  `connect-jira:jiraWorkflowPostFunctions`: Listing<`ConnectJira:jiraWorkflowPostFunction`>(!isEmpty)?
+
+  `connect-jira:jiraIssueContents`: Listing<`ConnectJira:jiraIssueContent`>(!isEmpty)?
+
+  `connect-jira:jiraDevelopmentTool`: Listing<`ConnectJira:jiraDevelopmentTool`>(!isEmpty)?
+
+  `connect-jira:jiraProjectTabPanels`: Listing<`ConnectJira:jiraProjectTabPanel`>(!isEmpty)?
+
+  `connect-jira:jiraGlobalPermissions`: Listing<`ConnectJira:jiraGlobalPermission`>(!isEmpty)?
+
+  `connect-jira:jiraIssueFields`: Listing<`ConnectJira:jiraIssueField`>(!isEmpty)?
+
+  `connect-jira:jiraIssueTypes`: Listing<`ConnectJira:jiraIssueType`>(!isEmpty)?
+
+  `connect-jira:jiraTimeTrackingProviders`: Listing<`ConnectJira:jiraTimeTrackingProvider`>(!isEmpty)?
+
+  `connect-jira:lifecycle`: Listing<`ConnectConfluence:lifecycle`>(!isEmpty)?
+
+  `connect-confluence:keyboardShortcuts`: Listing<`ConnectConfluence:keyboardShortcut`>(!isEmpty)?
+
+  `connect-confluence:adminPages`: Listing<`ConnectConfluence:configurePage`>(!isEmpty)?
+
+  `connect-confluence:webPanels`: Listing<`ConnectConfluence:webPanel`>(!isEmpty)?
+
+  `connect-confluence:webhooks`: Listing<`ConnectConfluence:webhook`>(!isEmpty)?
+
+  `connect-confluence:postInstallPage`: Listing<`ConnectConfluence:generalPage`>(!isEmpty)?
+
+  `connect-confluence:webSections`: Listing<`ConnectConfluence:webSection`>(!isEmpty)?
+
+  `connect-confluence:generalPages`: Listing<`ConnectConfluence:generalPage`>(!isEmpty)?
+
+  `connect-confluence:webItems`: Listing<`ConnectConfluence:webItem`>(!isEmpty)?
+
+  `connect-confluence:configurePage`: Listing<`ConnectConfluence:configurePage`>(!isEmpty)?
+
+  `connect-confluence:dialogs`: Listing<`ConnectConfluence:dialog`>(!isEmpty)?
+
+  `connect-confluence:blueprints`: Listing<`ConnectConfluence:blueprint`>(!isEmpty)?
+
+  `connect-confluence:spaceToolsTabs`: Listing<`ConnectConfluence:spaceToolsTab`>(!isEmpty)?
+
+  `connect-confluence:confluenceContentProperties`: Listing<`ConnectConfluence:confluenceContentProperty`>(!isEmpty)?
+
+  `connect-confluence:customContent`: Listing<`ConnectConfluence:customContent`>(!isEmpty)?
+
+  `connect-confluence:dynamicContentMacros`: Listing<`ConnectConfluence:dynamicContentMacro`>(!isEmpty)?
+
+  `connect-confluence:staticContentMacros`: Listing<`ConnectConfluence:staticContentMacro`>(!isEmpty)?
+
+  `connect-confluence:contentBylineItems`: Listing<`ConnectConfluence:contentBylineItem`>(!isEmpty)?
+
+  `connect-confluence:confluenceThemes`: Listing<`ConnectConfluence:confluenceTheme`>(!isEmpty)?
+
+  `connect-confluence:lifecycle`: Listing<`ConnectConfluence:lifecycle`>(!isEmpty)?
+
+  `automation:action`: Listing<`Automation:action`>(!isEmpty)?
+
+  `automation:trigger`: Listing<`Automation:trigger`>(!isEmpty)?
+
+  `automation:condition`: Listing<`Automation:branch`>(!isEmpty)?
+
+  `automation:branch`: Listing<`Automation:branch`>(!isEmpty)?
+
+  `automation:attributeResolver`: Listing<`Automation:template`>(!isEmpty)?
+
+  `automation:template`: Listing<`Automation:template`>(!isEmpty)?
+
+  `automation:i18n`: Listing<`Automation:i18n`>(!isEmpty)?
+}
+
+class TriggerAlternate0 {
+  /// events
+  events: Array|FilteredProductEvents
+
+  /// function
+  `function`: ExtensionKey
+
+  /// filter
+  filter: ProductEventsFilter?
+
+  key: ModuleKeySchema
+}
+
+class TriggerAlternate1 {
+  /// events
+  events: Array|FilteredProductEvents
+
+  /// endpoint
+  endpoint: ExtensionKey
+
+  /// filter
+  filter: ProductEventsFilter?
+
+  key: ModuleKeySchema
+}
+
+class Webtrigger {
+  /// function
+  ///
+  /// The key of the function that should be invoked for this webtrigger.
+  `function`: ExtensionKey
+
+  key: ModuleKeySchema
+}
+
+class Consumer {
+  /// queue
+  queue: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))
+
+  resolver: Resolver
+
+  key: ModuleKeySchema
+}
+
+class Resolver {
+  `function`: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))
+
+  method: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))
+}
+
+class ScheduledTriggerAlternate0 {
+  /// foo
+  foo: String?
+
+  /// function
+  ///
+  /// The key of the function that should be invoked for this scheduledTrigger.
+  `function`: ExtensionKey
+
+  /// interval
+  ///
+  /// The interval at which to trigger function invocation.
+  interval: "hour"|"day"|"week" = Undefined()
+
+  key: ModuleKeySchema
+}
+
+class ScheduledTriggerAlternate1 {
+  /// foo
+  foo: String?
+
+  /// endpoint
+  endpoint: ExtensionKey
+
+  /// interval
+  interval: "hour"|"day"|"week" = Undefined()
+
+  key: ModuleKeySchema
+}
+
+/// A Forge Function definition.
+class Function {
+  /// handler
+  ///
+  /// The method, within the index.js function, that will be called to invoke the function.
+  handler: String(length.isBetween(1, 1024))
+
+  /// cleanup
+  ///
+  /// Whether this function is used for GDPR cleanup (default false). If set to true, this function has a
+  /// higher rate limit for ESS list queries.
+  cleanup: Boolean?
+
+  outboundAuthContainerId: String(length.isBetween(1, 1024))?
+
+  /// A collection where the key represents the region name and the value contains the metadata of the
+  /// function, including the lambda ARN and Runtime.
+  functions: Mapping<String, Functions>?
+
+  key: ModuleKeySchema
+}
+
+class Functions {
+  `function`: Function?
+
+  runtime: (RuntimeLayer|RuntimeWrapper)?
+}
+
+class Function {
+  name: String?
+}
+
+class Migration {
+  key: ModuleKeySchema
+}
+
+class MigrationAlternate0 {
+  listenerTriggered: ImportStatusAlternate0?
+}
+
+class ImportStatusAlternate0 {
+  `function`: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))
+}
+
+class MigrationAlternate1 {
+  appDataUploaded: ImportStatusAlternate0?
+}
+
+/// A Forge Remote endpoint definition.
+class Endpoint {
+  /// key for the remotes definition
+  remote: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))
+
+  route: Route?
+
+  auth: Auth?
+
+  key: ModuleKeySchema
+}
+
+class Route {
+  /// Path of the remote endpoint to invoke
+  path: String
+}
+
+class Auth {
+  appUserToken: AppUserToken?
+
+  appSystemToken: AppSystemToken?
+}
+
+class AppUserToken {
+  /// Enable sharing user token with the remote
+  enabled: Boolean
+}
+
+class AppSystemToken {
+  /// Enable sharing app token with the remote
+  enabled: Boolean
+}
+
+/// A Forge Remote definition.
+class Remote {
+  baseUrl: String
+
+  operations: Listing<"storage"|"other"|"compute"|"fetch">(!isEmpty)?
+
+  storage: Storage?
+
+  key: ModuleKeySchema
+}
+
+class Storage {
+  inScopeEUD: Boolean?
+}
+
+class MacroAlternate0 {
+  title: String(length.isBetween(1, 255))
+
+  `function`: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))
+
+  description: String(length.isBetween(1, 10000))?
+
+  refDataSchema: RefDataSchema?
+
+  config: Config?
+
+  data: Data?
+
+  /// Default if undefined: `"block"`
+  layout: ("inline"|"block")?
+
+  key: ModuleKeySchema
+}
+
+class RefDataSchema {
+  inputType: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))
+}
+
+class Config {
+  `function`: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))?
+}
+
+class Data {
+  `function`: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))?
+
+  schema: "confluence/macro_homepage"?
+}
+
+class MacroAlternate1 {
+  title: String(length.isBetween(1, 255))
+
+  resolver: (ResolverAlternate0|ResolverAlternate1)?
+
+  resource: String(length.isBetween(1, 23), matches(Regex(#"^[a-zA-Z0-9_\-]+$"#)))
+
+  resourceUploadId: String(length.isBetween(1, 255))?
+
+  description: String(length.isBetween(1, 10000))?
+
+  refDataSchema: RefDataSchema?
+
+  config: (Boolean|ConfigAlternate1)?
+
+  data: Data?
+
+  /// Default if undefined: `"default"`
+  render: ("native"|"default")?
+
+  /// Default if undefined: `"block"`
+  layout: ("inline"|"block")?
+
+  key: ModuleKeySchema
+}
+
+class ResolverAlternate0 {
+  `function`: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))
+}
+
+class ResolverAlternate1 {
+  endpoint: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))
+}
+
+class ConfigAlternate1 {
+  `function`: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))?
+
+  /// Default if undefined: `"default"`
+  render: ("native"|"default")?
+}
+
+class Data {
+  `function`: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))?
+
+  schema: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))?
+}
+
+class `Confluence:homepageFeedAlternate0` {
+  title: String(length.isBetween(1, 255))
+
+  `function`: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))
+
+  displayConditions: Dynamic?
+
+  keyboardShortcut: KeyboardShortcut?
+
+  key: ModuleKeySchema
+}
+
+class KeyboardShortcut {
+  /// Keyboard key(s)/combination(s) used to trigger this module.
+  accelerator: String(length.isBetween(1, 255))
+
+  description: String(length.isBetween(1, 1000))?
+}
+
+class `Confluence:contextMenuAlternate1` {
+  title: String(length.isBetween(1, 255))
+
+  resolver: (ResolverAlternate0|ResolverAlternate1)?
+
+  resource: String(length.isBetween(1, 23), matches(Regex(#"^[a-zA-Z0-9_\-]+$"#)))
+
+  resourceUploadId: String(length.isBetween(1, 255))?
+
+  viewportSize: ("small"|"medium"|"large")(length.isBetween(1, 255))?
+
+  displayConditions: Dynamic?
+
+  keyboardShortcut: KeyboardShortcut?
+
+  /// Default if undefined: `"default"`
+  render: ("native"|"default")?
+
+  key: ModuleKeySchema
+}
+
+class `Confluence:homepageFeedAlternate1` {
+  title: String(length.isBetween(1, 255))
+
+  resolver: (ResolverAlternate0|ResolverAlternate1)?
+
+  resource: String(length.isBetween(1, 23), matches(Regex(#"^[a-zA-Z0-9_\-]+$"#)))
+
+  resourceUploadId: String(length.isBetween(1, 255))?
+
+  viewportSize: ("small"|"medium"|"large"|"xlarge"|"max")(length.isBetween(1, 255))?
+
+  displayConditions: Dynamic?
+
+  keyboardShortcut: KeyboardShortcut?
+
+  /// Default if undefined: `"default"`
+  render: ("native"|"default")?
+
+  key: ModuleKeySchema
+}
+
+class `Confluence:contentBylineItemAlternate0` {
+  title: String(length.isBetween(1, 255))
+
+  tooltip: String(length.isBetween(1, 255))?
+
+  icon: String(length.isBetween(1, 255))?
+
+  description: String(length.isBetween(1, 1000))?
+
+  `function`: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))
+
+  dynamicProperties: ResolverAlternate0?
+
+  displayConditions: Dynamic?
+
+  keyboardShortcut: KeyboardShortcut?
+
+  key: ModuleKeySchema
+}
+
+class `Confluence:contentBylineItemAlternate1` {
+  title: String(length.isBetween(1, 255))
+
+  tooltip: String(length.isBetween(1, 255))?
+
+  icon: String(length.isBetween(1, 255))?
+
+  description: String(length.isBetween(1, 1000))?
+
+  resolver: (ResolverAlternate0|ResolverAlternate1)?
+
+  dynamicProperties: ResolverAlternate0?
+
+  resource: String(length.isBetween(1, 23), matches(Regex(#"^[a-zA-Z0-9_\-]+$"#)))
+
+  resourceUploadId: String(length.isBetween(1, 255))?
+
+  viewportSize: ("small"|"medium"|"large")(length.isBetween(1, 255))?
+
+  displayConditions: Dynamic?
+
+  keyboardShortcut: KeyboardShortcut?
+
+  /// Default if undefined: `"default"`
+  render: ("native"|"default")?
+
+  key: ModuleKeySchema
+}
+
+class `Confluence:spacePageAlternate0` {
+  title: String(length.isBetween(1, 255))
+
+  icon: String(length.isBetween(1, 255))?
+
+  route: String(length.isBetween(1, 255), matches(Regex(#"^[a-z0-9\-]+$"#)))
+
+  `function`: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))
+
+  displayConditions: Dynamic?
+
+  keyboardShortcut: KeyboardShortcut?
+
+  key: ModuleKeySchema
+}
+
+class `Confluence:spacePageAlternate1` {
+  title: String(length.isBetween(1, 255))
+
+  icon: String(length.isBetween(1, 255))?
+
+  route: String(length.isBetween(1, 255), matches(Regex(#"^[a-z0-9\-]+$"#)))
+
+  resolver: (ResolverAlternate0|ResolverAlternate1)?
+
+  resource: String(length.isBetween(1, 23), matches(Regex(#"^[a-zA-Z0-9_\-]+$"#)))
+
+  resourceUploadId: String(length.isBetween(1, 255))?
+
+  displayConditions: Dynamic?
+
+  keyboardShortcut: KeyboardShortcut?
+
+  /// Default if undefined: `"default"`
+  render: ("native"|"default")?
+
+  key: ModuleKeySchema
+}
+
+class `Confluence:spaceSettingAlternate0` {
+  title: String(length.isBetween(1, 255))
+
+  route: String(length.isBetween(1, 255), matches(Regex(#"^[a-z0-9\-]+$"#)))?
+
+  `function`: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))
+
+  displayConditions: Dynamic?
+
+  keyboardShortcut: KeyboardShortcut?
+
+  key: ModuleKeySchema
+}
+
+class `Confluence:spaceSettingAlternate1` {
+  title: String(length.isBetween(1, 255))
+
+  route: String(length.isBetween(1, 255), matches(Regex(#"^[a-z0-9\-]+$"#)))?
+
+  resolver: (ResolverAlternate0|ResolverAlternate1)?
+
+  resource: String(length.isBetween(1, 23), matches(Regex(#"^[a-zA-Z0-9_\-]+$"#)))
+
+  resourceUploadId: String(length.isBetween(1, 255))?
+
+  displayConditions: Dynamic?
+
+  keyboardShortcut: KeyboardShortcut?
+
+  /// Default if undefined: `"default"`
+  render: ("native"|"default")?
+
+  key: ModuleKeySchema
+}
+
+class `Confluence:globalSettingAlternate0` {
+  title: String(length.isBetween(1, 255))
+
+  `function`: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))
+
+  displayConditions: Dynamic?
+
+  /// A flag indicating whether this settings instance will be used as the app's configuration
+  ///
+  /// Default if undefined: `false`
+  useAsConfig: Boolean?
+
+  /// A flag indicating whether this settings instance will be used as the app's "Get Started"
+  ///
+  /// Default if undefined: `false`
+  useAsGetStarted: Boolean?
+
+  keyboardShortcut: KeyboardShortcut?
+
+  key: ModuleKeySchema
+}
+
+class `Confluence:globalSettingAlternate1` {
+  title: String(length.isBetween(1, 255))
+
+  resolver: (ResolverAlternate0|ResolverAlternate1)?
+
+  resource: String(length.isBetween(1, 23), matches(Regex(#"^[a-zA-Z0-9_\-]+$"#)))
+
+  resourceUploadId: String(length.isBetween(1, 255))?
+
+  displayConditions: Dynamic?
+
+  /// A flag indicating whether this settings instance will be used as the app's configuration
+  ///
+  /// Default if undefined: `false`
+  useAsConfig: Boolean?
+
+  /// A flag indicating whether this settings instance will be used as the app's "Get Started"
+  ///
+  /// Default if undefined: `false`
+  useAsGetStarted: Boolean?
+
+  keyboardShortcut: KeyboardShortcut?
+
+  /// Default if undefined: `"default"`
+  render: ("native"|"default")?
+
+  key: ModuleKeySchema
+}
+
+class `Confluence:globalPageAlternate0` {
+  title: String(length.isBetween(1, 255))
+
+  icon: String(length.isBetween(1, 255))?
+
+  route: String(length.isBetween(1, 255), matches(Regex(#"^[a-z0-9\-]+$"#)))
+
+  `function`: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))
+
+  displayConditions: Dynamic?
+
+  keyboardShortcut: KeyboardShortcut?
+
+  key: ModuleKeySchema
+}
+
+class `Confluence:globalPageAlternate1` {
+  title: String(length.isBetween(1, 255))
+
+  icon: String(length.isBetween(1, 255))?
+
+  route: String(length.isBetween(1, 255), matches(Regex(#"^[a-z0-9\-]+$"#)))
+
+  resolver: (ResolverAlternate0|ResolverAlternate1)?
+
+  resource: String(length.isBetween(1, 23), matches(Regex(#"^[a-zA-Z0-9_\-]+$"#)))
+
+  resourceUploadId: String(length.isBetween(1, 255))?
+
+  displayConditions: Dynamic?
+
+  keyboardShortcut: KeyboardShortcut?
+
+  /// Default if undefined: `"default"`
+  render: ("native"|"default")?
+
+  key: ModuleKeySchema
+}
+
+class `Confluence:customContentAlternate0` {
+  title: String(length.isBetween(1, 255))
+
+  description: String(length.isBetween(1, 1000))?
+
+  icon: String(length.isBetween(1, 255))?
+
+  bodyType: ("raw"|"storage")?
+
+  supportedContainerTypes: Listing<String(length.isBetween(1, 100), matches(Regex("^space$|^page$|^blogpost$|^this:[a-zA-Z0-9-]+$")))>(!isEmpty, isDistinct)
+
+  supportedChildTypes: Listing<String(length.isBetween(1, 100), matches(Regex("^attachment$|^comment$|^this:[a-zA-Z0-9-]+$")))>(!isEmpty, isDistinct)?
+
+  supportedSpacePermissions: Listing<"read"|"create"|"delete">(!isEmpty, isDistinct)?
+
+  indexing: Boolean?
+
+  preventDuplicateTitle: Boolean?
+
+  `function`: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))
+
+  key: ModuleKeySchema
+}
+
+class `Confluence:customContentAlternate1` {
+  title: String(length.isBetween(1, 255))
+
+  description: String(length.isBetween(1, 1000))?
+
+  icon: String(length.isBetween(1, 255))?
+
+  bodyType: ("raw"|"storage")?
+
+  supportedContainerTypes: Listing<String(length.isBetween(1, 100), matches(Regex("^space$|^page$|^blogpost$|^this:[a-zA-Z0-9-]+$")))>(!isEmpty, isDistinct)
+
+  supportedChildTypes: Listing<String(length.isBetween(1, 100), matches(Regex("^attachment$|^comment$|^this:[a-zA-Z0-9-]+$")))>(!isEmpty, isDistinct)?
+
+  supportedSpacePermissions: Listing<"read"|"create"|"delete">(!isEmpty, isDistinct)?
+
+  indexing: Boolean?
+
+  preventDuplicateTitle: Boolean?
+
+  resolver: ResolverAlternate0?
+
+  resource: String(length.isBetween(1, 23), matches(Regex(#"^[a-zA-Z0-9_\-]+$"#)))
+
+  resourceUploadId: String(length.isBetween(1, 255))?
+
+  /// Default if undefined: `"default"`
+  render: ("native"|"default")?
+
+  key: ModuleKeySchema
+}
+
+class `Jira:workflowValidator` {
+  name: String(length.isBetween(1, 255))
+
+  description: String(length.isBetween(1, 1000))
+
+  `function`: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))?
+
+  expression: String?
+
+  errorMessage: (Parser|String)?
+
+  resolver: (ResolverAlternate0|ResolverAlternate1)?
+
+  view: Create?
+
+  edit: Create?
+
+  create: Create?
+
+  key: ModuleKeySchema
+}
+
+class Parser {
+  expression: String
+}
+
+class Create {
+  resource: String(length.isBetween(1, 23), matches(Regex(#"^[a-zA-Z0-9_\-]+$"#)))
+
+  /// Default if undefined: `"default"`
+  render: ("default"|"native")?
+}
+
+class `Jira:entityProperty` {
+  propertyKey: String(length.isBetween(1, 255))
+
+  /// Default if undefined: `"issue"`
+  entityType: ("issue"|"project"|"user")?
+
+  values: Listing<Value>
+
+  key: ModuleKeySchema
+}
+
+class Value {
+  path: String(length.isBetween(1, 255))
+
+  type: "date"|"number"|"string"|"text"|"user" = Undefined()
+
+  searchAlias: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))?
+}
+
+class `Jira:customFieldAlternate0` {
+  formatter: Formatter?
+
+  name: String(length.isBetween(1, 100))
+
+  description: String(length.isBetween(1, 1000))
+
+  type: "date"|"datetime"|"group"|"number"|"string"|"user" = Undefined()
+
+  collection: ("list"|"none")?
+
+  validation: Validation?
+
+  readOnly: Boolean?
+
+  resolver: (ResolverAlternate0|ResolverAlternate1)?
+
+  edit: (EditAlternate0|ImportStatusAlternate0)?
+
+  value: ImportStatusAlternate0?
+
+  searchSuggestions: (ImportStatusAlternate0|Parser)?
+
+  /// Default if undefined: `"default"`
+  render: ("default"|"native")?
+
+  parser: Parser?
+
+  displayConditions: DisplayConditions?
+
+  key: ModuleKeySchema
+}
+
+class Formatter {
+  expression: String
+
+  export: Boolean?
+}
+
+class Validation {
+  expression: String
+
+  errorMessage: String?
+}
+
+class EditAlternate0 {
+  /// Default if undefined: `"modal"`
+  display: ("inline"|"modal")?
+
+  resource: String(length.isBetween(1, 23), matches(Regex(#"^[a-zA-Z0-9_\-]+$"#)))
+
+  /// Default if undefined: `"default"`
+  render: ("default"|"native")?
+}
+
+class DisplayConditions {
+
+}
+
+class `Jira:customFieldAlternate1` {
+  formatter: Formatter
+
+  schema: DisplayConditions?
+
+  name: String(length.isBetween(1, 100))
+
+  description: String(length.isBetween(1, 1000))
+
+  type: "object"
+
+  collection: ("list"|"none")?
+
+  validation: Validation?
+
+  readOnly: Boolean?
+
+  resolver: (ResolverAlternate0|ResolverAlternate1)?
+
+  edit: (EditAlternate0|ImportStatusAlternate0)?
+
+  value: ImportStatusAlternate0?
+
+  searchSuggestions: (ImportStatusAlternate0|Parser)?
+
+  /// Default if undefined: `"default"`
+  render: ("default"|"native")?
+
+  parser: Parser?
+
+  displayConditions: DisplayConditions?
+
+  key: ModuleKeySchema
+}
+
+class `Jira:customFieldTypeAlternate0` {
+  formatter: Formatter?
+
+  name: String(length.isBetween(1, 100))
+
+  description: String(length.isBetween(1, 1000))
+
+  type: "date"|"datetime"|"group"|"number"|"string"|"user" = Undefined()
+
+  collection: ("list"|"none")?
+
+  validation: Validation?
+
+  readOnly: Boolean?
+
+  edit: (EditAlternate0|ImportStatusAlternate0)?
+
+  value: ImportStatusAlternate0?
+
+  searchSuggestions: (ImportStatusAlternate0|Parser)?
+
+  icon: String(length.isBetween(1, 255))?
+
+  resolver: (ResolverAlternate0|ResolverAlternate1)?
+
+  contextConfig: (ContextConfigAlternate0|ContextConfigAlternate1)?
+
+  /// Default if undefined: `"default"`
+  render: ("default"|"native")?
+
+  parser: Parser?
+
+  displayConditions: DisplayConditions?
+
+  key: ModuleKeySchema
+}
+
+class ContextConfigAlternate0 {
+  `function`: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))
+
+  layout: ("basic"|"native")?
+}
+
+class ContextConfigAlternate1 {
+  resource: String(length.isBetween(1, 23), matches(Regex(#"^[a-zA-Z0-9_\-]+$"#)))
+
+  layout: ("basic"|"blank"|"native")?
+
+  /// Default if undefined: `"default"`
+  render: ("default"|"native")?
+}
+
+class `Jira:customFieldTypeAlternate1` {
+  formatter: Formatter
+
+  schema: DisplayConditions?
+
+  name: String(length.isBetween(1, 100))
+
+  description: String(length.isBetween(1, 1000))
+
+  type: "object"
+
+  collection: ("list"|"none")?
+
+  validation: Validation?
+
+  readOnly: Boolean?
+
+  edit: (EditAlternate0|ImportStatusAlternate0)?
+
+  value: ImportStatusAlternate0?
+
+  searchSuggestions: (ImportStatusAlternate0|Parser)?
+
+  icon: String(length.isBetween(1, 255))?
+
+  resolver: (ResolverAlternate0|ResolverAlternate1)?
+
+  contextConfig: (ContextConfigAlternate0|ContextConfigAlternate1)?
+
+  /// Default if undefined: `"default"`
+  render: ("default"|"native")?
+
+  parser: Parser?
+
+  displayConditions: DisplayConditions?
+
+  key: ModuleKeySchema
+}
+
+class `Jira:issueActivityAlternate0` {
+  title: String(length.isBetween(1, 255))
+
+  `function`: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))
+
+  displayConditions: DisplayConditions?
+
+  key: ModuleKeySchema
+}
+
+class `Jira:issueActivityAlternate1` {
+  title: String(length.isBetween(1, 255))
+
+  resolver: (ResolverAlternate0|ResolverAlternate1)?
+
+  resource: String(length.isBetween(1, 23), matches(Regex(#"^[a-zA-Z0-9_\-]+$"#)))
+
+  resourceUploadId: String(length.isBetween(1, 255))?
+
+  viewportSize: ("small"|"medium"|"large"|"xlarge"|"max")(length.isBetween(1, 255))?
+
+  displayConditions: DisplayConditions?
+
+  /// Default if undefined: `"default"`
+  render: ("native"|"default")?
+
+  key: ModuleKeySchema
+}
+
+class `Jira:uiModification` {
+  title: String(length.isBetween(1, 255))
+
+  resolver: (ResolverAlternate0|ResolverAlternate1)?
+
+  resource: String(length.isBetween(1, 23), matches(Regex(#"^[a-zA-Z0-9_\-]+$"#)))
+
+  /// Default if undefined: `"default"`
+  render: ("native"|"default")?
+
+  key: ModuleKeySchema
+}
+
+class `Jira:issueContextAlternate0` {
+  `function`: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))
+
+  title: String(length.isBetween(1, 255))
+
+  label: String(length.isBetween(1, 255))
+
+  status: Status?
+
+  icon: String(length.isBetween(1, 255))?
+
+  displayConditions: DisplayConditions?
+
+  key: ModuleKeySchema
+}
+
+class Status {
+  type: "badge"|"icon"|"lozenge" = Undefined()
+
+  value: Value
+}
+
+class Value {
+  label: String(length.isBetween(1, 255))
+
+  url: String?
+
+  type: ("default"|"inprogress"|"moved"|"new"|"removed"|"success")?
+}
+
+class `Jira:issueContextAlternate1` {
+  resource: String(length.isBetween(1, 23), matches(Regex(#"^[a-zA-Z0-9_\-]+$"#)))
+
+  resolver: (ResolverAlternate0|ResolverAlternate1)?
+
+  /// Default if undefined: `"default"`
+  render: ("default"|"native")?
+
+  title: String(length.isBetween(1, 255))
+
+  label: String(length.isBetween(1, 255))
+
+  status: Status?
+
+  icon: String(length.isBetween(1, 255))?
+
+  displayConditions: DisplayConditions?
+
+  key: ModuleKeySchema
+}
+
+class `Jira:issuePanelAlternate0` {
+  title: String(length.isBetween(1, 255))
+
+  icon: String(length.isBetween(1, 255))
+
+  allowMultiple: Boolean?
+
+  config: ImportStatusAlternate0?
+
+  `function`: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))
+
+  displayConditions: DisplayConditions?
+
+  key: ModuleKeySchema
+}
+
+class `Jira:issuePanelAlternate1` {
+  title: String(length.isBetween(1, 255))
+
+  icon: String(length.isBetween(1, 255))
+
+  allowMultiple: Boolean?
+
+  config: ImportStatusAlternate0?
+
+  resolver: (ResolverAlternate0|ResolverAlternate1)?
+
+  resource: String(length.isBetween(1, 23), matches(Regex(#"^[a-zA-Z0-9_\-]+$"#)))
+
+  resourceUploadId: String(length.isBetween(1, 255))?
+
+  viewportSize: ("small"|"medium"|"large"|"xlarge"|"max")(length.isBetween(1, 255))?
+
+  displayConditions: DisplayConditions?
+
+  /// Default if undefined: `"default"`
+  render: ("native"|"default")?
+
+  key: ModuleKeySchema
+}
+
+class `Jira:dashboardGadgetAlternate0` {
+  `function`: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))
+
+  edit: ImportStatusAlternate0?
+
+  title: TitleAlternate0|String
+
+  description: String(length.isBetween(1, 255))
+
+  thumbnail: String(length.isBetween(1, 255))?
+
+  refreshable: Boolean?
+
+  displayConditions: DisplayConditions?
+
+  key: ModuleKeySchema
+}
+
+class TitleAlternate0 {
+  text: String(length.isBetween(1, 255))
+
+  href: String(length.isBetween(1, 1000))
+}
+
+class `Jira:dashboardGadgetAlternate1` {
+  resource: String(length.isBetween(1, 23), matches(Regex(#"^[a-zA-Z0-9_\-]+$"#)))
+
+  resolver: (ResolverAlternate0|ResolverAlternate1)?
+
+  edit: Create?
+
+  /// Default if undefined: `"default"`
+  render: ("default"|"native")?
+
+  title: TitleAlternate0|String
+
+  description: String(length.isBetween(1, 255))
+
+  thumbnail: String(length.isBetween(1, 255))?
+
+  refreshable: Boolean?
+
+  displayConditions: DisplayConditions?
+
+  key: ModuleKeySchema
+}
+
+class `Jira:adminPageAlternate0` {
+  `function`: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))
+
+  layout: ("basic"|"native")?
+
+  title: String(length.isBetween(1, 255))
+
+  icon: String(length.isBetween(1, 255))?
+
+  pages: Listing<Page>?
+
+  sections: Listing<Section>?
+
+  displayConditions: DisplayConditions?
+
+  useAsConfig: Boolean?
+
+  useAsGetStarted: Boolean?
+
+  key: ModuleKeySchema
+}
+
+class Page {
+  title: String(length.isBetween(1, 255))
+
+  route: String(length.isBetween(1, 255))
+
+  icon: String(length.isBetween(1, 255))?
+}
+
+class Section {
+  header: String(length.isBetween(1, 255))?
+
+  pages: Listing<Page>
+}
+
+class `Jira:adminPageAlternate1` {
+  resource: String(length.isBetween(1, 23), matches(Regex(#"^[a-zA-Z0-9_\-]+$"#)))
+
+  resourceUploadId: String(length.isBetween(1, 255))?
+
+  resolver: (ResolverAlternate0|ResolverAlternate1)?
+
+  layout: ("basic"|"blank"|"native")?
+
+  /// Default if undefined: `"default"`
+  render: ("default"|"native")?
+
+  title: String(length.isBetween(1, 255))
+
+  icon: String(length.isBetween(1, 255))?
+
+  pages: Listing<Page>?
+
+  sections: Listing<Section>?
+
+  displayConditions: DisplayConditions?
+
+  useAsConfig: Boolean?
+
+  useAsGetStarted: Boolean?
+
+  key: ModuleKeySchema
+}
+
+class `Jira:projectSettingsPageAlternate0` {
+  `function`: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))
+
+  layout: ("basic"|"native")?
+
+  title: String(length.isBetween(1, 255))
+
+  icon: String(length.isBetween(1, 255))?
+
+  pages: Listing<Page>?
+
+  sections: Listing<Section>?
+
+  displayConditions: DisplayConditions?
+
+  key: ModuleKeySchema
+}
+
+class `Jira:projectSettingsPageAlternate1` {
+  resource: String(length.isBetween(1, 23), matches(Regex(#"^[a-zA-Z0-9_\-]+$"#)))
+
+  resourceUploadId: String(length.isBetween(1, 255))?
+
+  resolver: (ResolverAlternate0|ResolverAlternate1)?
+
+  layout: ("basic"|"blank"|"native")?
+
+  /// Default if undefined: `"default"`
+  render: ("default"|"native")?
+
+  title: String(length.isBetween(1, 255))
+
+  icon: String(length.isBetween(1, 255))?
+
+  pages: Listing<Page>?
+
+  sections: Listing<Section>?
+
+  displayConditions: DisplayConditions?
+
+  key: ModuleKeySchema
+}
+
+class `Jira:workflowCondition` {
+  name: String(length.isBetween(1, 255))
+
+  description: String(length.isBetween(1, 1000))
+
+  expression: String
+
+  resolver: (ResolverAlternate0|ResolverAlternate1)?
+
+  view: Create?
+
+  edit: Create?
+
+  create: Create?
+
+  key: ModuleKeySchema
+}
+
+class `Jira:dashboardBackgroundScript` {
+  resource: String(length.isBetween(1, 23), matches(Regex(#"^[a-zA-Z0-9_\-]+$"#)))
+
+  resolver: (ResolverAlternate0|ResolverAlternate1)?
+
+  /// Default if undefined: `"default"`
+  render: ("default"|"native")?
+
+  displayConditions: DisplayConditions?
+
+  key: ModuleKeySchema
+}
+
+class `Jira:globalPermission` {
+  name: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_ ]+$")))
+
+  description: String
+
+  anonymousAllowed: Boolean
+
+  defaultGrants: Listing<"all"|"jira-administrators"|"none">?
+
+  key: ModuleKeySchema
+}
+
+class `Jira:projectPermission` {
+  name: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_ ]+$")))
+
+  description: String
+
+  /// Default if undefined: `"other"`
+  category: ("attachments"|"comments"|"issues"|"other"|"projects"|"time_tracking"|"voters_and_watchers")?
+
+  key: ModuleKeySchema
+}
+
+class `Jira:workflowPostFunction` {
+  name: String(length.isBetween(1, 255))
+
+  description: String(length.isBetween(1, 1000))
+
+  `function`: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))
+
+  resolver: (ResolverAlternate0|ResolverAlternate1)?
+
+  view: Create?
+
+  edit: Create?
+
+  create: Create?
+
+  key: ModuleKeySchema
+}
+
+class `Jira:issueViewBackgroundScript` {
+  shouldReloadOnRefresh: Boolean?
+
+  resource: String(length.isBetween(1, 23), matches(Regex(#"^[a-zA-Z0-9_\-]+$"#)))
+
+  resolver: (ResolverAlternate0|ResolverAlternate1)?
+
+  /// Default if undefined: `"default"`
+  render: ("default"|"native")?
+
+  displayConditions: DisplayConditions?
+
+  key: ModuleKeySchema
+}
+
+class `Jira:jqlFunction` {
+  name: String(length.isBetween(1, 255))
+
+  arguments: Listing<Argument>
+
+  types: Listing<
+    "attachment"
+    |"cascading_option"
+    |"component"
+    |"date"
+    |"duration"
+    |"group"
+    |"hierarchy_level"
+    |"issue"
+    |"issue_link_type"
+    |"issue_list"
+    |"issue_restriction"
+    |"issue_security_level"
+    |"issue_type"
+    |"label"
+    |"number"
+    |"option"
+    |"priority"
+    |"project"
+    |"project_category"
+    |"project_role"
+    |"project_type"
+    |"resolution"
+    |"saved_filter"
+    |"status"
+    |"status_category"
+    |"team"
+    |"text"
+    |"url"
+    |"user"
+    |"version">
+
+  operators: Listing<"!="|"!~"|"<"|"<="|"="|">"|">="|"in"|"is"|"is not"|"not in"|"~">
+
+  `function`: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))
+
+  key: ModuleKeySchema
+}
+
+class Argument {
+  name: String(length.isBetween(1, 255))
+
+  required: Boolean
+}
+
+class `Compass:teamPageAlternate0` {
+  title: String(length.isBetween(1, 255))
+
+  icon: String(length.isBetween(1, 255))?
+
+  `function`: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))
+
+  key: ModuleKeySchema
+}
+
+class `Compass:teamPageAlternate1` {
+  title: String(length.isBetween(1, 255))
+
+  icon: String(length.isBetween(1, 255))?
+
+  resolver: (ResolverAlternate0|ResolverAlternate1)?
+
+  resource: String(length.isBetween(1, 23), matches(Regex(#"^[a-zA-Z0-9_\-]+$"#)))
+
+  key: ModuleKeySchema
+}
+
+class `Compass:componentPageAlternate0` {
+  title: String(length.isBetween(1, 255))
+
+  icon: String(length.isBetween(1, 255))?
+
+  `function`: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))
+
+  displayConditions: DisplayConditions?
+
+  key: ModuleKeySchema
+}
+
+class `Compass:componentPageAlternate1` {
+  title: String(length.isBetween(1, 255))
+
+  icon: String(length.isBetween(1, 255))?
+
+  resolver: (ResolverAlternate0|ResolverAlternate1)?
+
+  displayConditions: DisplayConditions?
+
+  resource: String(length.isBetween(1, 23), matches(Regex(#"^[a-zA-Z0-9_\-]+$"#)))
+
+  key: ModuleKeySchema
+}
+
+class `Compass:globalPageAlternate0` {
+  title: String(length.isBetween(1, 255))
+
+  icon: String(length.isBetween(1, 255))?
+
+  fullscreen: Boolean?
+
+  `function`: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))
+
+  key: ModuleKeySchema
+}
+
+class `Compass:globalPageAlternate1` {
+  title: String(length.isBetween(1, 255))
+
+  icon: String(length.isBetween(1, 255))?
+
+  fullscreen: Boolean?
+
+  resolver: (ResolverAlternate0|ResolverAlternate1)?
+
+  resource: String(length.isBetween(1, 23), matches(Regex(#"^[a-zA-Z0-9_\-]+$"#)))
+
+  key: ModuleKeySchema
+}
+
+class `Compass:dataProvider` {
+  domains: Listing<String>(!isEmpty, isDistinct)
+
+  /// linkTypes
+  linkTypes: Listing<"chat-channel"|"document"|"repository"|"dashboard"|"on-call"|"project"|"other-link">(!isEmpty, isDistinct)
+
+  `function`: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))
+
+  callback: ImportStatusAlternate0?
+
+  key: ModuleKeySchema
+}
+
+class `JiraServiceManagement:organizationPanelAlternate0` {
+  title: String(length.isBetween(1, 255))
+
+  icon: String(length.isBetween(1, 255))?
+
+  layout: ("native"|"basic")(length.isBetween(1, 255))?
+
+  `function`: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))
+
+  key: ModuleKeySchema
+}
+
+class `JiraServiceManagement:queuePageAlternate1` {
+  title: String(length.isBetween(1, 255))
+
+  icon: String(length.isBetween(1, 255))?
+
+  layout: ("native"|"basic"|"blank")(length.isBetween(1, 255))?
+
+  resolver: (ResolverAlternate0|ResolverAlternate1)?
+
+  resource: String(length.isBetween(1, 23), matches(Regex(#"^[a-zA-Z0-9_\-]+$"#)))
+
+  resourceUploadId: String(length.isBetween(1, 255))?
+
+  /// Default if undefined: `"default"`
+  render: ("native"|"default")?
+
+  key: ModuleKeySchema
+}
+
+class `JiraServiceManagement:portalRequestDetailPanelAlternate0` {
+  title: String(length.isBetween(1, 255))
+
+  icon: String(length.isBetween(1, 255))?
+
+  layout: ("native"|"basic")(length.isBetween(1, 255))?
+
+  viewportSize: ("small"|"medium"|"large"|"xlarge")(length.isBetween(1, 255))?
+
+  `function`: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))
+
+  key: ModuleKeySchema
+}
+
+class `JiraServiceManagement:portalRequestDetailPanelAlternate1` {
+  title: String(length.isBetween(1, 255))
+
+  icon: String(length.isBetween(1, 255))?
+
+  layout: ("native"|"basic")(length.isBetween(1, 255))?
+
+  resolver: (ResolverAlternate0|ResolverAlternate1)?
+
+  resource: String(length.isBetween(1, 23), matches(Regex(#"^[a-zA-Z0-9_\-]+$"#)))
+
+  resourceUploadId: String(length.isBetween(1, 255))?
+
+  /// Default if undefined: `"default"`
+  render: ("native"|"default")?
+
+  key: ModuleKeySchema
+}
+
+class `JiraServiceManagement:organizationPanelAlternate1` {
+  title: String(length.isBetween(1, 255))
+
+  icon: String(length.isBetween(1, 255))?
+
+  layout: ("native"|"basic")(length.isBetween(1, 255))?
+
+  viewportSize: ("small"|"medium"|"large"|"xlarge")(length.isBetween(1, 255))?
+
+  resolver: (ResolverAlternate0|ResolverAlternate1)?
+
+  resource: String(length.isBetween(1, 23), matches(Regex(#"^[a-zA-Z0-9_\-]+$"#)))
+
+  resourceUploadId: String(length.isBetween(1, 255))?
+
+  /// Default if undefined: `"default"`
+  render: ("native"|"default")?
+
+  key: ModuleKeySchema
+}
+
+class `JiraServiceManagement:portalFooterAlternate0` {
+  layout: ("native"|"basic")(length.isBetween(1, 255))?
+
+  pages: Listing<"help_center"|"portal"|"create_request"|"view_request"|"my_requests"|"approvals"|"profile">?
+
+  viewportSize: ("xsmall"|"small"|"medium"|"large"|"xlarge")(length.isBetween(1, 255))?
+
+  `function`: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))
+
+  key: ModuleKeySchema
+}
+
+class `JiraServiceManagement:portalSubheaderAlternate1` {
+  pages: Listing<"help_center"|"portal"|"create_request"|"view_request"|"my_requests"|"approvals"|"profile">?
+
+  viewportSize: ("xsmall"|"small"|"medium"|"large"|"xlarge")(length.isBetween(1, 255))?
+
+  resolver: (ResolverAlternate0|ResolverAlternate1)?
+
+  resource: String(length.isBetween(1, 23), matches(Regex(#"^[a-zA-Z0-9_\-]+$"#)))
+
+  resourceUploadId: String(length.isBetween(1, 255))?
+
+  /// Default if undefined: `"default"`
+  render: ("native"|"default")?
+
+  key: ModuleKeySchema
+}
+
+class `JiraServiceManagement:portalSubheaderAlternate0` {
+  pages: Listing<"help_center"|"portal"|"create_request"|"view_request"|"my_requests"|"approvals"|"profile">?
+
+  viewportSize: ("xsmall"|"small"|"medium"|"large"|"xlarge")(length.isBetween(1, 255))?
+
+  `function`: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))
+
+  key: ModuleKeySchema
+}
+
+class `JiraServiceManagement:portalProfilePanelAlternate0` {
+  title: String(length.isBetween(1, 255))
+
+  icon: String(length.isBetween(1, 255))?
+
+  layout: ("native"|"basic")(length.isBetween(1, 255))?
+
+  `function`: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))
+
+  key: ModuleKeySchema
+}
+
+class `JiraServiceManagement:portalProfilePanelAlternate1` {
+  title: String(length.isBetween(1, 255))
+
+  icon: String(length.isBetween(1, 255))?
+
+  layout: ("native"|"basic")(length.isBetween(1, 255))?
+
+  viewportSize: ("small"|"medium"|"large"|"xlarge")(length.isBetween(1, 255))?
+
+  resolver: (ResolverAlternate0|ResolverAlternate1)?
+
+  resource: String(length.isBetween(1, 23), matches(Regex(#"^[a-zA-Z0-9_\-]+$"#)))
+
+  resourceUploadId: String(length.isBetween(1, 255))?
+
+  /// Default if undefined: `"default"`
+  render: ("native"|"default")?
+
+  key: ModuleKeySchema
+}
+
+class `JiraServiceManagement:portalUserMenuActionAlternate0` {
+  title: String(length.isBetween(1, 255))
+
+  `function`: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))
+
+  displayConditions: DisplayConditions?
+
+  key: ModuleKeySchema
+}
+
+class `JiraServiceManagement:portalUserMenuActionAlternate1` {
+  title: String(length.isBetween(1, 255))
+
+  resolver: (ResolverAlternate0|ResolverAlternate1)?
+
+  resource: String(length.isBetween(1, 23), matches(Regex(#"^[a-zA-Z0-9_\-]+$"#)))
+
+  resourceUploadId: String(length.isBetween(1, 255))?
+
+  viewportSize: ("small"|"medium"|"large"|"xlarge")(length.isBetween(1, 255))?
+
+  displayConditions: DisplayConditions?
+
+  /// Default if undefined: `"default"`
+  render: ("native"|"default")?
+
+  key: ModuleKeySchema
+}
+
+class `JiraServiceManagement:portalRequestViewActionAlternate0` {
+  title: String(length.isBetween(1, 255))
+
+  `function`: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))
+
+  key: ModuleKeySchema
+}
+
+class `JiraServiceManagement:portalRequestViewActionAlternate1` {
+  title: String(length.isBetween(1, 255))
+
+  resolver: (ResolverAlternate0|ResolverAlternate1)?
+
+  resource: String(length.isBetween(1, 23), matches(Regex(#"^[a-zA-Z0-9_\-]+$"#)))
+
+  resourceUploadId: String(length.isBetween(1, 255))?
+
+  viewportSize: ("small"|"medium"|"large"|"xlarge")(length.isBetween(1, 255))?
+
+  /// Default if undefined: `"default"`
+  render: ("native"|"default")?
+
+  key: ModuleKeySchema
+}
+
+class `JiraServiceManagement:portalRequestCreatePropertyPanelAlternate0` {
+  title: String(length.isBetween(1, 255))?
+
+  icon: String(length.isBetween(1, 255))?
+
+  layout: ("native"|"basic")(length.isBetween(1, 255))?
+
+  viewportSize: ("small"|"medium"|"large"|"xlarge")(length.isBetween(1, 255))?
+
+  `function`: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))
+
+  key: ModuleKeySchema
+}
+
+class `JiraServiceManagement:portalRequestCreatePropertyPanelAlternate1` {
+  viewportSize: ("xsmall"|"small"|"medium"|"large"|"xlarge")(length.isBetween(1, 255))?
+
+  title: String(length.isBetween(1, 255))?
+
+  icon: String(length.isBetween(1, 255))?
+
+  layout: ("native"|"basic")(length.isBetween(1, 255))?
+
+  resolver: (ResolverAlternate0|ResolverAlternate1)?
+
+  resource: String(length.isBetween(1, 23), matches(Regex(#"^[a-zA-Z0-9_\-]+$"#)))
+
+  resourceUploadId: String(length.isBetween(1, 255))?
+
+  /// Default if undefined: `"default"`
+  render: ("native"|"default")?
+
+  key: ModuleKeySchema
+}
+
+class `JiraServiceManagement:assetsImportTypeAlternate0` {
+  title: String(length.isBetween(1, 255))
+
+  icon: String(length.isBetween(1, 255))
+
+  `function`: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))
+
+  onDeleteImport: (ImportStatusAlternate0)?
+
+  startImport: ImportStatusAlternate0
+
+  stopImport: ImportStatusAlternate0
+
+  importStatus: ImportStatusAlternate0
+
+  key: ModuleKeySchema
+}
+
+class `JiraServiceManagement:assetsImportTypeAlternate1` {
+  title: String(length.isBetween(1, 255))
+
+  icon: String(length.isBetween(1, 255))
+
+  resource: String(length.isBetween(1, 23), matches(Regex(#"^[a-zA-Z0-9_\-]+$"#)))
+
+  resolver: (ResolverAlternate0|ResolverAlternate1)?
+
+  /// Default if undefined: `"default"`
+  render: "native"|"default" = Undefined()
+
+  onDeleteImport: (ImportStatusAlternate0)?
+
+  startImport: ImportStatusAlternate0
+
+  stopImport: ImportStatusAlternate0
+
+  importStatus: ImportStatusAlternate0
+
+  key: ModuleKeySchema
+}
+
+class `JiraServiceManagement:assetsSchemaPageAlternate0` {
+  title: String(length.isBetween(1, 255))
+
+  icon: String(length.isBetween(1, 255))
+
+  `function`: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))
+
+  key: ModuleKeySchema
+}
+
+class `Bitbucket:repoMainMenuPageAlternate0` {
+  title: String
+
+  icon: String?
+
+  resource: String(length.isBetween(1, 23), matches(Regex("^[a-zA-Z0-9-_]+$")))?
+
+  `function`: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))
+
+  key: ModuleKeySchema
+}
+
+class `Bitbucket:repoMainMenuPageAlternate1` {
+  title: String(length.isBetween(1, 255))
+
+  icon: String?
+
+  resolver: (ResolverAlternate0|ResolverAlternate1)?
+
+  resource: String(length.isBetween(1, 23), matches(Regex("^[a-zA-Z0-9-_]+$")))
+
+  key: ModuleKeySchema
+}
+
+class `Bitbucket:workspaceSettingsMenuPageAlternate0` {
+  title: String
+
+  resource: String(length.isBetween(1, 23), matches(Regex("^[a-zA-Z0-9-_]+$")))?
+
+  `function`: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))
+
+  key: ModuleKeySchema
+}
+
+class `Bitbucket:workspaceSettingsMenuPageAlternate1` {
+  title: String(length.isBetween(1, 255))
+
+  resolver: (ResolverAlternate0|ResolverAlternate1)?
+
+  resource: String(length.isBetween(1, 23), matches(Regex("^[a-zA-Z0-9-_]+$")))
+
+  key: ModuleKeySchema
+}
+
+class `Bitbucket:mergeCheck` {
+  name: String
+
+  description: String?
+
+  triggers: Listing<"on-merge"|"on-code-pushed">(!isEmpty)
+
+  `function`: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))
+
+  key: ModuleKeySchema
+}
+
+class `Automation:action` {
+  `function`: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))
+
+  config: Config
+
+  key: ModuleKeySchema
+}
+
+class `Automation:trigger` {
+  title: String(length.isBetween(1, 255))
+
+  `function`: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))
+
+  key: ModuleKeySchema
+}
+
+class `Automation:branch` {
+  `function`: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))
+
+  config: Config
+
+  key: ModuleKeySchema
+}
+
+class `Automation:template` {
+  `function`: String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-_]+$")))
+
+  key: ModuleKeySchema
+}
+
+class `Automation:i18n` {
+  resource: String
+
+  supportedLocales: Mapping<String, String>
+
+  key: ModuleKeySchema
+}
+
+class BearerMethodSchemaAlternate1 {
+  type: "authorization-header"|"form-encoded"|"uri-query" = Undefined()
+
+  /// Custom authorization header prefix
+  prefix: String(length <= 1000)?
+
+  /// Custom Header name or Parameter name (depending on type)
+  parameter: String?
+}
+
+/// AppPermissionsSchema
+class AppPermissionsSchema {
+  /// scopes
+  scopes: Listing<String>(length >= 0)?
+
+  /// content
+  content: Content?
+
+  /// external
+  `external`: External?
+}
+
+/// content
+class Content {
+  /// scripts
+  scripts: Listing<String(length <= 128)>(length >= 0)?
+
+  /// styles
+  styles: Listing<"unsafe-inline">(length >= 0)?
+}
+
+/// external
+class External {
+  /// fetch
+  fetch: Fetch?
+
+  /// fonts
+  fonts: Listing<String(length <= 1000)>(length >= 0)?
+
+  /// frames
+  frames: Listing<String(length <= 1000)>(length >= 0)?
+
+  /// navigation
+  navigation: Listing<String(length <= 1000)>(length >= 0)?
+
+  /// images
+  images: Listing<String(length <= 1000)>(length >= 0)?
+
+  /// media
+  media: Listing<String(length <= 1000)>(length >= 0)?
+
+  /// scripts
+  scripts: Listing<String(length <= 1000)>(length >= 0)?
+
+  /// styles
+  styles: Listing<String(length <= 1000)>(length >= 0)?
+}
+
+/// fetch
+class Fetch {
+  /// backend
+  backend: Listing<String(length <= 1000)|ClientAlternate1>(length >= 0)?
+
+  /// client
+  client: Listing<String(length <= 1000)|ClientAlternate1>(length >= 0)?
+}
+
+/// remote
+///
+/// References a Remote
+class ClientAlternate1 {
+  remote: String(length <= 1000)
+}
+
+/// HostedResourcesSchema
+class HostedResourcesSchema {
+  /// A key for the resource, which other modules can refer to. Must be unique within the manifest and
+  /// have a maximum of 23 characters.
+  key: String(length <= 23, matches(Regex("^[a-zA-Z0-9_-]+$")))
+
+  path: String
+
+  tunnel: Tunnel?
+}
+
+class Tunnel {
+  port: Number
+}
+
+/// RemotesSchema
+class RemotesSchema {
+  /// A key for the remote, which other modules can refer to. Must be unique within the manifest and have
+  /// a maximum of 23 characters.
+  key: String(length <= 23, matches(Regex("^[a-zA-Z0-9_-]+$")))
+
+  baseUrl: String
+
+  /// The type of operations done in the remote
+  operations: Listing<"storage"|"other">(!isEmpty)?
+
+  /// Options related to remote storage
+  storage: Storage?
+}
+
+/// Options related to remote storage
+class Storage {
+  /// Labels to classify the type of data stored
+  classifications: Listing<"ugc"|"pii"|"other">(!isEmpty)
+}
+
+class ProvidersSchema {
+  /// auth
+  ///
+  /// External authentication providers
+  auth: Listing<Mapping<String, Any>|Mapping<String, Any>>
+}
+
+class AuthProviderPredefined {
+  key: ModuleKeySchema
+
+  /// Name shown to end users
+  name: String(length <= 1000)
+
+  /// Pre-defined integration name
+  integration: "adobe"|"azuredevops"|"dropbox"|"google"|"miro" = Undefined()
+
+  bearerMethod: BearerMethodSchema
+
+  clientId: String(length <= 1000)
+
+  scopes: Listing<String>(length >= 0)?
+
+  remotes: Listing<ModuleKeySchema>
+}
+
+class AuthProviderCustom {
+  key: ModuleKeySchema
+
+  /// Name shown to end users
+  name: String(length <= 1000)
+
+  type: "oauth2"
+
+  bearerMethod: BearerMethodSchema
+
+  clientId: String(length <= 1000)
+
+  scopes: Listing<String>(length >= 0)?
+
+  remotes: Listing<ModuleKeySchema>?
+
+  actions: Actions
+}
+
+class Actions {
+  authorization: ActionDefinition
+
+  exchange: ExchangeActionDefinition
+
+  refreshToken: ExchangeActionDefinition?
+
+  revokeToken: ActionDefinition?
+
+  retrieveProfile: RetrieveProfileAlternate0|RetrieveProfileAlternate1
+}
+
+/// DynamicProfileRetriever
+///
+/// Use a Forge function to map the fields to profile information
+class RetrieveProfileAlternate0 {
+  remote: ModuleKeySchema
+
+  path: String(length <= 1000)
+
+  `function`: ModuleKeySchema
+}
+
+/// StaticProfileRetriever
+///
+/// A static direct mapping of API response fields to profile information
+class RetrieveProfileAlternate1 {
+  remote: ModuleKeySchema
+
+  path: String(length <= 1000)
+
+  resolvers: Resolvers
+}
+
+class Resolvers {
+  id: String
+
+  displayName: String
+
+  avatarUrl: String?
+}
+
+class ActionDefinition {
+  remote: ModuleKeySchema
+
+  path: String(length <= 1000)
+
+  /// Additional GET parameters sent to the API
+  queryParameters: Mapping<String(matches(Regex("^[a-zA-Z0-9_-]+$"))), String>?
+}
+
+class ExchangeActionDefinition {
+  remote: ModuleKeySchema
+
+  path: String(length <= 1000)
+
+  resolvers: Resolvers?
+}
+
+class Resolvers {
+  /// Path to the 'access token' parameter within the JSON response from the auhuorization API (full stop
+  /// separated for nested parameters)
+  ///
+  /// Default if undefined: `"access_token"`
+  accessToken: String(length <= 1000)?
+
+  /// Path to the 'access token expires' parameter within the JSON response from the auhuorization API
+  /// (full stop separated for nested parameters)
+  ///
+  /// Default if undefined: `"expires_in"`
+  accessTokenExpires: String(length <= 1000)?
+
+  /// Path to the 'refresh token' parameter within the JSON response from the auhuorization API (full
+  /// stop separated for nested parameters)
+  ///
+  /// Default if undefined: `"refresh_token"`
+  refreshToken: String?
+}
+
+/// ProductEventsFilter
+class ProductEventsFilter {
+  /// ignoreSelf
+  ///
+  /// The app will ignore events generated by itself
+  ignoreSelf: Boolean
+}
+
+class FilteredProductEvent {
+  /// eventType
+  eventType: String
+
+  /// filter
+  filter: ProductEventsFilter
+}
+
+class RuntimeLayer {
+  identifier: String
+
+  layer: Layer
+}
+
+class Layer {
+  name: String?
+
+  version: String?
+
+  arn: String?
+}
+
+class RuntimeWrapper {
+  identifier: String
+
+  wrapper: Wrapper
+}
+
+class Wrapper {
+  name: String?
+
+  version: String?
+}
+
+class NotAlternate0 {
+  /// customFieldName
+  customFieldName: String
+
+  /// customFieldValue
+  customFieldValue: String
+}
+
+class NotAlternate1 {
+  /// componentTypes
+  componentTypes: Listing<"APPLICATION"|"LIBRARY"|"OTHER"|"SERVICE">|"APPLICATION"|"LIBRARY"|"OTHER"|"SERVICE"
+}
+
+class AndAlternate2 {
+  /// not
+  not: NotAlternate0|NotAlternate1
+}
+
+class DisplayConditionsAlternate3 {
+  /// or
+  or: Listing<NotAlternate0|NotAlternate1|AndAlternate2>
+}
+
+class DisplayConditionsAlternate4 {
+  /// and
+  and: Listing<NotAlternate0|NotAlternate1|AndAlternate2>
+}
+
+/// Icon
+///
+///
+///
+/// Defines an icon to display.
+///
+/// <h3>Example</h3>
+///
+///
+///
+///
+///
+/// { "icon": { "width": 16, "height": 16, "url": "/my-icon.png" } }
+class Icon {
+  width: Int?
+
+  url: Uri
+
+  height: Int?
+}
+
+/// Web Panel Layout
+///
+///
+///
+/// <h3>Example</h3>
+///
+///
+///
+///
+///
+/// { "layout": { "width": "100", "height": "200" } }
+class WebPanelLayout {
+  width: String(length <= 10)?
+
+  height: String(length <= 10)?
+}
+
+/// Feature Flag Actions
+///
+///
+///
+/// <p>Feature flag actions that can be performed by Jira users.</p> <p>Each action is optional (unless
+/// indicated otherwise). The absence of an action indicates that the action is not supported by the
+/// provider.</p>
+class FeatureFlagProviderActionsBean {
+  ///
+  ///
+  /// <p>Defines the URL template that is used when an action is invoked. The following context
+  /// parameters are supported: <code>{issue.key}</code>, <code>{issue.summary}</code>,
+  /// <code>{issue.flags}</code>.</p>
+  linkFlag: ListFlags?
+
+  ///
+  ///
+  /// <p>Defines the URL template that is used when an action is invoked. The following context
+  /// parameters are supported: <code>{issue.key}</code>, <code>{issue.summary}</code>,
+  /// <code>{issue.flags}</code>.</p>
+  createFlag: ListFlags?
+
+  ///
+  ///
+  /// <p>Defines the URL template that is used when an action is invoked. The following context
+  /// parameters are supported: <code>{issue.key}</code>, <code>{issue.summary}</code>,
+  /// <code>{issue.flags}</code>.</p>
+  listFlags: ListFlags?
+}
+
+///
+///
+/// <p>Defines the URL template that is used when an action is invoked. The following context parameters
+/// are supported: <code>{issue.key}</code>, <code>{issue.summary}</code>,
+/// <code>{issue.flags}</code>.</p>
+class ListFlags {
+  templateUrl: String
+}
+
+/// URL
+class Url {
+  url: Uri
+}
+
+/// Development Actions
+///
+///
+///
+/// <p>Development actions that can be performed by Jira users.</p> <p>Each action is optional (unless
+/// indicated otherwise). The absence of an action indicates that the action is not supported by the
+/// provider.</p>
+class DevelopmentToolModuleActionsBean {
+  ///
+  ///
+  /// <p>Defines the URL template that is used when an action is invoked. The following context
+  /// parameters are supported: <code>{issue.key}</code>, <code>{issue.summary}</code>.</p>
+  createBranch: CreateBranch?
+}
+
+///
+///
+/// <p>Defines the URL template that is used when an action is invoked. The following context parameters
+/// are supported: <code>{issue.key}</code>, <code>{issue.summary}</code>.</p>
+class CreateBranch {
+  templateUrl: String
+}
+
+/// User Interface Support
+///
+///
+///
+/// The UI Support element allows you to define how your content property field will be presented in the
+/// CQL Builder.
+///
+/// When you define UI support for a field, then the CQL builder will include it in all CQL features in
+/// Confluence, including other CQL based macros.
+///
+/// See the <a href="../content-property-index-key-configuration/">content property key</a> documentation
+/// for a complete content property example.
+///
+/// <p><b>Example</b></p>
+///
+///
+///
+///
+///
+/// { "defaultOperator": "~", "name": { "value": "Content Type", "i18n": "attachment.type.name" },
+/// "tooltip": { "value": "Content Type Tooltip", "i18n": "attachment.type.tooltip" }, "dataUri":
+/// "/data/content-types", "valueType": "string" }
+class UiSupport {
+  defaultOperator: String(length <= 100)?
+
+  dataUri: String?
+
+  valueType: 
+    "space"
+    |"SPACE"
+    |"label"
+    |"LABEL"
+    |"user"
+    |"USER"
+    |"contentid"
+    |"CONTENTID"
+    |"contenttype"
+    |"CONTENTTYPE"
+    |"date"
+    |"DATE"
+    |"string"
+    |"STRING"
+    |"number"
+    |"NUMBER" = Undefined()
+
+  name: I18nProperty
+
+  tooltip: I18nProperty?
+}
+
+/// Custom Content UI Support
+///
+///
+///
+/// Declares information related for rendering the custom content in the UI. <br> Add-ons have the
+/// ability to control the UI components for user to view the custom content.
+///
+///
+///
+///
+///
+/// { "contentViewComponent": { "addonKey": "addon-key", "moduleKey": "general-page-module-key" } }
+///
+///
+///
+/// <h3>View component example</h3> Suppose we already defined a general page module like following:
+///
+///
+///
+///
+///
+/// { "url":
+/// "/my-general-page?content.plugin={content.plugin}&content.id={content.id}&content.version={content.version}&space.key={space.key}&customParameter={ac.customData}",
+/// "name": { "value": "My viewer page" }, "key": "my-viewer" }
+///
+///
+///
+/// And also the general page is used as a view component in ui support section.
+///
+///
+///
+///
+///
+/// { "contentViewComponent": { "moduleKey": "my-viewer" } }
+///
+///
+///
+/// When user clicks the title of the corresponding custom content in the search result.
+/// <code>/my-general-page</code> will be rendered in a iframe with following context parameters being
+/// passed.<br> <ul> <li><code>content.plugin</code>: The content type key of the content. eg:
+/// <code>ac:addon-key:module-key</code></li> <li><code>content.id</code>: The id of the content</li>
+/// <li><code>content.version</code>: The version of the content</li> <li><code>space.key</code>: The key
+/// of the space which content is contained in</li> </ul> Note, that if an optional custom value is
+/// defined in the url string, such as <code>{ac.customData}</code> in the example above, it will be
+/// substituted with the value of the <code>ac.customData</code> parameter that will be taken from the
+/// Confluence's current URL. Add-on developers can specify any number of custom parameters, provided
+/// that they have names that follow this convention: <code>ac.parameter_name</code>. If more than one
+/// custom parameter with the same name is defined in Confluence's current URL, only the first value will
+/// be used. For additional information on custom parameters see <a
+/// href="../../context-parameters/#add-on-specific-context-parameters">Context Parameters</a>.
+///
+/// <h3>Context Parameters</h3> View components support Confluence context parameters. When rendering the
+/// view component the context variables will be passed to the URL that is defined in the corresponding
+/// view component module.<br> You can retrieve the content or space information with these parameters
+/// via Confluence REST API and render it according to your needs.<br> Please consult <a
+/// href="../../context-parameters/">Context Parameters</a> for what parameters are currently supported.
+class CustomContentUISupport {
+  editComponentTitlePlaceholder: I18nProperty?
+
+  listViewComponent: ComponentReference?
+
+  editComponent: ComponentReference?
+
+  /// Custom Content Icons
+  ///
+  ///
+  ///
+  /// Defines icons that used for displaying the custom content.
+  ///
+  ///
+  ///
+  ///
+  ///
+  /// { "item": { "width": 16, "height": 16, "url": "/item.png" } }
+  icons: Icons
+
+  contentViewComponent: ComponentReference
+
+  editComponentSubmitButtonLabel: I18nProperty?
+
+  editComponentCancelButtonLabel: I18nProperty?
+
+  /// Custom Content Breadcrumbs
+  ///
+  ///
+  ///
+  /// Defines the breadcrumbs for this content<br>
+  ///
+  /// <h3>Use Relation API to generate breadcrumbs</h3> An add-on can specify multiple content
+  /// relationships for generating the breadcrumbs. Suppose we have <code>ac:add-on-key:employee</code>
+  /// defined with following breadcrumbs setting: <pre><code> ... "breadcrumbs": { "relations": [ {
+  /// "name": "worksFor" } ] } ... </code></pre>
+  ///
+  /// And we have following custom content created in the Confluence: <table> <caption
+  /// style='caption-side:bottom;padding:10px;'>Example custom content for building search
+  /// breadcrumbs</caption> <tr> <th>Content ID</th> <th>Content Type</th> <th>Title</th> </tr> <tr>
+  /// <td>1</td> <td>ac:add-on-key:organization</td> <td>Company A</td> </tr> <tr> <td>2</td>
+  /// <td>ac:add-on-key:organization</td> <td>Company B</td> </tr> <tr> <td>3</td>
+  /// <td>ac:add-on-key:employee</td> <td>Charlie</td> </tr> </table>
+  ///
+  /// By using the <a href="https://docs.atlassian.com/confluence/REST/latest/#relation">Relation API</a>
+  /// we can create following relations between these content: <ul> <li><b>Charlie works for Company
+  /// A</b>: PUT /rest/relation/worksFor/from/content/3/to/content/1</li> <li><b>Charlie works for
+  /// Company B</b>: PUT /rest/relation/worksFor/from/content/3/to/content/2</li> </ul>
+  ///
+  /// Since we have let <code>ac:add-on-key:employee</code> to use <code>worksFor</code> relation to
+  /// generate the breadcrumbs. Confluence will fetch the relations that were created under name
+  /// <code>worksFor</code>, then display the titles in the creation order of their relations in the
+  /// search result like this: <img src="/cloud/connect/images/confluence-quick-search-breadcrumbs.png"
+  /// alt="Quick search breadcrumbs" style="border:1px solid #999;margin-top:10px;width:500px">
+  ///
+  /// Similarly the site search will display the breadcrumbs as well: <img
+  /// src="/cloud/connect/images/confluence-search-breadcrumbs.png" alt="Quick search breadcrumbs"
+  /// style="border:1px solid #999;margin-top:10px;width:500px">
+  breadcrumbs: Breadcrumbs?
+}
+
+/// Custom Content Icons
+///
+///
+///
+/// Defines icons that used for displaying the custom content.
+///
+///
+///
+///
+///
+/// { "item": { "width": 16, "height": 16, "url": "/item.png" } }
+class Icons {
+  item: Icon
+
+  create: Icon?
+
+  list: Icon?
+}
+
+/// Custom Content Breadcrumbs
+///
+///
+///
+/// Defines the breadcrumbs for this content<br>
+///
+/// <h3>Use Relation API to generate breadcrumbs</h3> An add-on can specify multiple content
+/// relationships for generating the breadcrumbs. Suppose we have <code>ac:add-on-key:employee</code>
+/// defined with following breadcrumbs setting: <pre><code> ... "breadcrumbs": { "relations": [ { "name":
+/// "worksFor" } ] } ... </code></pre>
+///
+/// And we have following custom content created in the Confluence: <table> <caption
+/// style='caption-side:bottom;padding:10px;'>Example custom content for building search
+/// breadcrumbs</caption> <tr> <th>Content ID</th> <th>Content Type</th> <th>Title</th> </tr> <tr>
+/// <td>1</td> <td>ac:add-on-key:organization</td> <td>Company A</td> </tr> <tr> <td>2</td>
+/// <td>ac:add-on-key:organization</td> <td>Company B</td> </tr> <tr> <td>3</td>
+/// <td>ac:add-on-key:employee</td> <td>Charlie</td> </tr> </table>
+///
+/// By using the <a href="https://docs.atlassian.com/confluence/REST/latest/#relation">Relation API</a>
+/// we can create following relations between these content: <ul> <li><b>Charlie works for Company A</b>:
+/// PUT /rest/relation/worksFor/from/content/3/to/content/1</li> <li><b>Charlie works for Company B</b>:
+/// PUT /rest/relation/worksFor/from/content/3/to/content/2</li> </ul>
+///
+/// Since we have let <code>ac:add-on-key:employee</code> to use <code>worksFor</code> relation to
+/// generate the breadcrumbs. Confluence will fetch the relations that were created under name
+/// <code>worksFor</code>, then display the titles in the creation order of their relations in the search
+/// result like this: <img src="/cloud/connect/images/confluence-quick-search-breadcrumbs.png" alt="Quick
+/// search breadcrumbs" style="border:1px solid #999;margin-top:10px;width:500px">
+///
+/// Similarly the site search will display the breadcrumbs as well: <img
+/// src="/cloud/connect/images/confluence-search-breadcrumbs.png" alt="Quick search breadcrumbs"
+/// style="border:1px solid #999;margin-top:10px;width:500px">
+class Breadcrumbs {
+  relations: Listing<Relation>?
+}
+
+/// Custom Content Relation
+///
+///
+///
+/// A reference to a custom content relation
+///
+///
+///
+///
+///
+/// { "name": "worksFor" }
+class Relation {
+  name: String(length <= 100)?
+}
+
+/// Module Reference
+///
+///
+///
+/// A reference to a module defined in either this or another add-on
+///
+///
+///
+///
+///
+/// { "addonKey": "addon-key", "moduleKey": "general-page-module-key" }
+class ComponentReference {
+  addonKey: String(length <= 100)?
+
+  moduleKey: String(length <= 100)
+}
+
+/// Custom Content API Support
+///
+///
+///
+/// This property allows you to specify the container types your custom content can appear in, and its
+/// supported child content types. It also allows you to enable indexing of your custom content.
+///
+///
+///
+///
+///
+/// { "bodyType": "storage", "supportedContainerTypes": [ "space", "page" ], "supportedChildTypes": [
+/// "attachment", "comment" ], "supportedSpacePermissions": [], "preventDuplicateTitle": false,
+/// "indexing": { "enabled": true } }
+///
+///
+///
+/// <p>In the above example, you'll see we specify content type keys in the
+/// <code>supportedContainerTypes</code> and <code>supportedChildTypes</code> fields. There are 2
+/// categories of content type you can reference – built-in content and custom content.</p>
+///
+/// <h3>Built-in content types example</h3> The following snippet shows the content type we're defining
+/// can: <ul> <li>Be contained in a <code>space</code> or a <code>page</code></li> <li>Have a child
+/// <code>comment</code> or a child <code>attachment</code></li> </ul>
+///
+///
+///
+///
+///
+/// { "bodyType": "storage", "supportedContainerTypes": [ "space", "page" ], "supportedChildTypes": [
+/// "attachment", "comment" ], "supportedSpacePermissions": [], "preventDuplicateTitle": false,
+/// "indexing": { "enabled": true } }
+///
+///
+///
+///
+///
+/// <h3>Custom content example</h3> The following snippet shows the content type we're defining can: <ul>
+/// <li>Be contained in a content with type <code>type1</code> or <code>type2</code>, defined in an
+/// add-on with the key <code>my-first-addon</code></li> <li>Have a child of a content with type
+/// <code>type1</code> or <code>type2</code>, defined in an add-on with the key
+/// <code>my-second-addon</code></li> </ul>
+///
+///
+///
+///
+///
+/// { "bodyType": "storage", "supportedContainerTypes": [ "ac:my-first-addon:type2",
+/// "ac:my-first-addon:type1" ], "supportedChildTypes": [ "ac:my-second-addon:type1",
+/// "ac:my-second-addon:type2" ], "supportedSpacePermissions": [], "preventDuplicateTitle": false,
+/// "indexing": { "enabled": true } }
+///
+///
+///
+/// <h3>Raw body type custom content example</h3> You can define custom content to support a content body
+/// with a type of <code>raw</code>.<br> This is useful when you want to store, for example, stringified
+/// JSON to the content.
+///
+///
+///
+///
+///
+/// { "bodyType": "raw", "supportedContainerTypes": [ "space" ], "supportedChildTypes": [],
+/// "supportedSpacePermissions": [], "preventDuplicateTitle": false, "indexing": { "enabled": true } }
+///
+///
+///
+/// Content with a raw body looks like this: <pre><code> { "title": "My title", "space": {"key": "DS"},
+/// "type": "ac:add-on-key:module-key", "body": { "raw": { "value": "{\"field\": \"value\"}",
+/// "representation": "raw" } } } </code></pre>
+class ApiSupport {
+  bodyType: ("storage"|"STORAGE"|"raw"|"RAW")?
+
+  supportedChildTypes: Listing<String(length <= 100)>?
+
+  supportedSpacePermissions: Listing<String(length <= 100)>?
+
+  preventDuplicateTitle: Boolean?
+
+  indexing: Indexing?
+
+  supportedContainerTypes: Listing<String(length <= 100)>
+}
+
+/// Macro Parameter Indexing
+///
+///
+///
+/// Defines how this macro parameter will be indexed for site search
+///
+///
+///
+///
+///
+/// { "enabled": true }
+///
+///
+///
+/// <p>The macro parameter indexing property allows apps to hook into the mechanism by which Confluence
+/// populates its search index for site search. Each time macro is created or updated in Confluence, the
+/// value that is stored in the macro parameter will be added to the search index. The value of this
+/// macro parameter will also be used in displaying the excerpt text for search result.</p>
+///
+/// <p>This is useful when the body of the macro is not searchable, for example: macros with
+/// <code>bodyType: none</code>. The app can still provide meaningful search text for this content by
+/// storing the extracted information to the macro parameter. The data in this macro parameter will get
+/// indexed as is without any modification.</p>
+class Indexing {
+  enabled: Boolean?
+}
+
+/// Embedded Static Content Macro
+///
+///
+///
+/// An embedded reference to a static macro resource. These macro definitions are a subset of a Static
+/// Content Macro, defining only what cannot be inferred from the containing dynamic macro.
+///
+/// These embedded static content macros are used to define render mode mappings for your dynamic content
+/// macro.
+///
+/// <p><b>Example</b></p>
+///
+///
+///
+///
+///
+/// { "modules": { "dynamicContentMacros": [ { "renderModes": { "pdf": { "url": "/render-map-pdf" },
+/// "default": { "url": "/render-map-static" } }, "url": "/render-map?pageTitle={page.title}",
+/// "categories": [], "outputType": "block", "bodyType": "none", "aliases": [], "name": { "value": "Maps"
+/// }, "key": "dynamic-macro-example" } ] } }
+class EmbeddedStaticContentMacroBean {
+  url: Uri
+}
+
+/// Link
+///
+///
+///
+/// Represents a link, its optional title and alternative text.
+///
+/// <h3>Example</h3>
+///
+///
+///
+///
+///
+/// { "link": { "url": "/go-somewhere", "title": "Go Somewhere", "altText": "somewhere" } }
+class Link {
+  altText: String(length <= 1000)?
+
+  title: String(length <= 1000)?
+
+  url: String
+}
+
+/// Autoconvert
+///
+///
+///
+/// Autoconvert allows your macro to be inserted into the editor when a recognised URL is pasted in by
+/// the user. You define recognised URL patterns using 'matchers' which are registered in the editor when
+/// your add-on is installed.
+///
+/// When the macro is created in the editor, the URL string that triggered the autoconvert will be
+/// captured and inserted as a parameter on the macro body. You must define the name of this parameter by
+/// providing a string value for 'urlParameter'. This allows you to access the URL that triggered the
+/// autoconvert.
+///
+/// <p><b>Example</b></p>
+///
+/// This example inserts a macro into the editor when a user pastes in certain simple Facebook links.
+///
+///
+///
+///
+///
+/// { "renderModes": {}, "url": "/dynamic-macro?url={url}", "categories": [], "outputType": "block",
+/// "bodyType": "none", "aliases": [], "parameters": [ { "identifier": "url", "name": { "value": "URL" },
+/// "type": "string", "required": false, "multiple": false, "hidden": false } ], "autoconvert": {
+/// "urlParameter": "url", "matchers": [ { "pattern": "https://www.facebook.com/{}/about" }, { "pattern":
+/// "https://www.facebook.com/{}/music" }, { "pattern": "https://www.facebook.com/{}/movies/{}" } ] },
+/// "name": { "value": "Dynamic Macro With Autoconvert" }, "key": "dynamic-macro-with-autoconvert" }
+class Autoconvert {
+  matchers: Listing<Matchers>(length <= 200)?
+
+  urlParameter: String(length <= 100)
+}
+
+/// Matcher
+///
+///
+///
+/// Matchers define a URL string as part of an Autoconvert definition.
+///
+/// Wildcards (parts of the url that should always match, such as as a unique ID) can be defined using a
+/// single open and close curly bracket such as '{}'. Use a new brace pair for each separate wildcard.
+///
+/// Keep in mind that you'll need to define a separate matcher for each relevant internet protocol (such
+/// as http vs https).
+///
+/// <p><b>Example</b></p>
+///
+///
+///
+///
+///
+/// { "pattern": "https://www.facebook.com/{}/about" }
+class Matchers {
+  pattern: String(length <= 1024)
+}
+
+/// Image Placeholder
+///
+///
+///
+/// Defines a macro image placeholder to display in the Confluence editor.
+///
+/// <p><b>Example</b></p>
+///
+///
+///
+///
+///
+/// { "imagePlaceholder": { "width": 100, "height": 25, "url": "/images/placeholder.png", "applyChrome":
+/// true } }
+class ImagePlaceholder {
+  applyChrome: Boolean?
+
+  width: Int?
+
+  url: Uri
+
+  height: Int?
+}
+
+/// LookAndFeel
+///
+///
+///
+/// Defines custom look and feel experience.
+///
+/// <p><b>Example</b></p>
+///
+///
+///
+///
+///
+/// { "headings": { "color": "#333333" }, "links": { "color": "#3572B0" }, "menus": { "hoverOrFocus": {
+/// "backgroundColor": "#3873AE" }, "color": "#000000" }, "bordersAndDividers": { "color": "#0D0E0E" },
+/// "header": { "backgroundColor": "#661F2D", "button": { "backgroundColor": "#894E59", "color":
+/// "#FFFFFF" }, "primaryNavigation": { "hoverOrFocus": { "backgroundColor": "#863647", "color":
+/// "#FFFFFF" }, "color": "#FFFFFF" }, "secondaryNavigation": { "hoverOrFocus": { "backgroundColor":
+/// "#863647", "color": "#FFFFFF" }, "color": "#000000" }, "search": { "backgroundColor": "#9A636B",
+/// "color": "#FFFFFF" } }, "content": { "screen": { "layer": { "width": "100%", "height": "250px",
+/// "backgroundImage": "url('http://path/to/img/skyline.jpg')", "backgroundSize": "cover",
+/// "backgroundRepeat": "no-repeat" }, "gutterTop": "20px", "gutterRight": "small", "gutterBottom":
+/// "10px", "gutterLeft": "small", "background": "linear-gradient(45deg, rgba(176,104,112,1) 0%,
+/// rgba(244,212,216,1) 100%)" }, "container": { "padding": "0 20px", "borderRadius": "10px",
+/// "background": "#F4D4D8" }, "header": { "padding": "20px 0 90px 20px", "borderRadius": "5px 5px 0 0",
+/// "backgroundColor": "rgba(0, 0, 0, 0.2)" }, "body": { "padding": "10px", "borderRadius": "0 0 5px
+/// 5px", "background": "#FFFFFF" } } }
+class LookAndFeel {
+  bordersAndDividers: BordersAndDividers
+
+  headings: Headings
+
+  header: Header
+
+  links: Links
+
+  menus: Menus
+
+  content: Content
+}
+
+/// BordersAndDividers
+///
+///
+///
+/// Defines styles to be applied on the borders and dividers.
+///
+/// <p><b>Example</b></p>
+///
+///
+///
+///
+///
+/// { "color": "#0D0E0E" }
+class BordersAndDividers {
+  color: String(matches(Regex(#"^#([\da-fA-F]){3}$|^#([\da-fA-F]){6}$|^rgb\(\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*\)$|^rgba\(\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*((0.[0-9]*)|[01])\s*\)$|^rgb\((\d+)%,\s*(\d+)%,\s*(\d+)%\)$|^hsl\(\s*(0|[1-9]\d?|[12]\d\d|3[0-5]\d)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0|[1-9]\d?|100)%)\s*\)$|^hsla\(\s*(0|[1-9]\d?|[12]\d\d|3[0-5]\d)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0.[0-9]*)|[01])\s*\)$"#)))
+}
+
+/// Headings
+///
+///
+///
+/// Defines styles to be applied on the headings of the content (HTML h1 to b tags).
+///
+/// <p><b>Example</b></p>
+///
+///
+///
+///
+///
+/// { "color": "#333333" }
+class Headings {
+  color: String(matches(Regex(#"^#([\da-fA-F]){3}$|^#([\da-fA-F]){6}$|^rgb\(\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*\)$|^rgba\(\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*((0.[0-9]*)|[01])\s*\)$|^rgb\((\d+)%,\s*(\d+)%,\s*(\d+)%\)$|^hsl\(\s*(0|[1-9]\d?|[12]\d\d|3[0-5]\d)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0|[1-9]\d?|100)%)\s*\)$|^hsla\(\s*(0|[1-9]\d?|[12]\d\d|3[0-5]\d)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0.[0-9]*)|[01])\s*\)$"#)))
+}
+
+/// Header
+///
+///
+///
+/// Defines styles to be applied on the header.
+///
+/// <p><b>Example</b></p>
+///
+///
+///
+///
+///
+/// { "backgroundColor": "#661F2D", "button": { "backgroundColor": "#894E59", "color": "#FFFFFF" },
+/// "primaryNavigation": { "hoverOrFocus": { "backgroundColor": "#863647", "color": "#FFFFFF" }, "color":
+/// "#FFFFFF" }, "secondaryNavigation": { "hoverOrFocus": { "backgroundColor": "#863647", "color":
+/// "#FFFFFF" }, "color": "#000000" }, "search": { "backgroundColor": "#9A636B", "color": "#FFFFFF" } }
+class Header {
+  button: Button
+
+  backgroundColor: String(matches(Regex(#"^#([\da-fA-F]){3}$|^#([\da-fA-F]){6}$|^rgb\(\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*\)$|^rgba\(\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*((0.[0-9]*)|[01])\s*\)$|^rgb\((\d+)%,\s*(\d+)%,\s*(\d+)%\)$|^hsl\(\s*(0|[1-9]\d?|[12]\d\d|3[0-5]\d)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0|[1-9]\d?|100)%)\s*\)$|^hsla\(\s*(0|[1-9]\d?|[12]\d\d|3[0-5]\d)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0.[0-9]*)|[01])\s*\)$"#)))
+
+  primaryNavigation: PrimaryNavigation
+
+  search: Search
+
+  secondaryNavigation: SecondaryNavigation
+}
+
+/// Button
+///
+///
+///
+/// Defines styles to be applied on the button.
+///
+/// <p><b>Example</b></p>
+///
+///
+///
+///
+///
+/// { "backgroundColor": "#894E59", "color": "#FFFFFF" }
+class Button {
+  backgroundColor: String(matches(Regex(#"^#([\da-fA-F]){3}$|^#([\da-fA-F]){6}$|^rgb\(\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*\)$|^rgba\(\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*((0.[0-9]*)|[01])\s*\)$|^rgb\((\d+)%,\s*(\d+)%,\s*(\d+)%\)$|^hsl\(\s*(0|[1-9]\d?|[12]\d\d|3[0-5]\d)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0|[1-9]\d?|100)%)\s*\)$|^hsla\(\s*(0|[1-9]\d?|[12]\d\d|3[0-5]\d)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0.[0-9]*)|[01])\s*\)$"#)))
+
+  color: String(matches(Regex(#"^#([\da-fA-F]){3}$|^#([\da-fA-F]){6}$|^rgb\(\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*\)$|^rgba\(\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*((0.[0-9]*)|[01])\s*\)$|^rgb\((\d+)%,\s*(\d+)%,\s*(\d+)%\)$|^hsl\(\s*(0|[1-9]\d?|[12]\d\d|3[0-5]\d)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0|[1-9]\d?|100)%)\s*\)$|^hsla\(\s*(0|[1-9]\d?|[12]\d\d|3[0-5]\d)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0.[0-9]*)|[01])\s*\)$"#)))
+}
+
+/// PrimaryNavigation
+///
+///
+///
+/// Defines styles to be applied on the primary navigation.
+///
+/// <p><b>Example</b></p>
+///
+///
+///
+///
+///
+/// { "hoverOrFocus": { "backgroundColor": "#863647", "color": "#FFFFFF" }, "color": "#FFFFFF" }
+class PrimaryNavigation {
+  color: String(matches(Regex(#"^#([\da-fA-F]){3}$|^#([\da-fA-F]){6}$|^rgb\(\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*\)$|^rgba\(\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*((0.[0-9]*)|[01])\s*\)$|^rgb\((\d+)%,\s*(\d+)%,\s*(\d+)%\)$|^hsl\(\s*(0|[1-9]\d?|[12]\d\d|3[0-5]\d)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0|[1-9]\d?|100)%)\s*\)$|^hsla\(\s*(0|[1-9]\d?|[12]\d\d|3[0-5]\d)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0.[0-9]*)|[01])\s*\)$"#)))
+
+  hoverOrFocus: HoverOrFocus
+}
+
+///
+class HoverOrFocus {
+  backgroundColor: String(matches(Regex(#"^#([\da-fA-F]){3}$|^#([\da-fA-F]){6}$|^rgb\(\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*\)$|^rgba\(\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*((0.[0-9]*)|[01])\s*\)$|^rgb\((\d+)%,\s*(\d+)%,\s*(\d+)%\)$|^hsl\(\s*(0|[1-9]\d?|[12]\d\d|3[0-5]\d)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0|[1-9]\d?|100)%)\s*\)$|^hsla\(\s*(0|[1-9]\d?|[12]\d\d|3[0-5]\d)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0.[0-9]*)|[01])\s*\)$"#)))
+
+  color: String(matches(Regex(#"^#([\da-fA-F]){3}$|^#([\da-fA-F]){6}$|^rgb\(\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*\)$|^rgba\(\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*((0.[0-9]*)|[01])\s*\)$|^rgb\((\d+)%,\s*(\d+)%,\s*(\d+)%\)$|^hsl\(\s*(0|[1-9]\d?|[12]\d\d|3[0-5]\d)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0|[1-9]\d?|100)%)\s*\)$|^hsla\(\s*(0|[1-9]\d?|[12]\d\d|3[0-5]\d)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0.[0-9]*)|[01])\s*\)$"#)))?
+}
+
+/// Search
+///
+///
+///
+/// Defines styles to be applied on the search field.
+///
+/// <p><b>Example</b></p>
+///
+///
+///
+///
+///
+/// { "backgroundColor": "#9A636B", "color": "#FFFFFF" }
+class Search {
+  backgroundColor: String(matches(Regex(#"^#([\da-fA-F]){3}$|^#([\da-fA-F]){6}$|^rgb\(\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*\)$|^rgba\(\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*((0.[0-9]*)|[01])\s*\)$|^rgb\((\d+)%,\s*(\d+)%,\s*(\d+)%\)$|^hsl\(\s*(0|[1-9]\d?|[12]\d\d|3[0-5]\d)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0|[1-9]\d?|100)%)\s*\)$|^hsla\(\s*(0|[1-9]\d?|[12]\d\d|3[0-5]\d)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0.[0-9]*)|[01])\s*\)$"#)))
+
+  color: String(matches(Regex(#"^#([\da-fA-F]){3}$|^#([\da-fA-F]){6}$|^rgb\(\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*\)$|^rgba\(\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*((0.[0-9]*)|[01])\s*\)$|^rgb\((\d+)%,\s*(\d+)%,\s*(\d+)%\)$|^hsl\(\s*(0|[1-9]\d?|[12]\d\d|3[0-5]\d)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0|[1-9]\d?|100)%)\s*\)$|^hsla\(\s*(0|[1-9]\d?|[12]\d\d|3[0-5]\d)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0.[0-9]*)|[01])\s*\)$"#)))
+}
+
+/// SecondaryNavigation
+///
+///
+///
+/// Defines styles to be applied on the secondary navigation.
+///
+/// <p><b>Example</b></p>
+///
+///
+///
+///
+///
+/// { "hoverOrFocus": { "backgroundColor": "#863647", "color": "#FFFFFF" }, "color": "#000000" }
+class SecondaryNavigation {
+  color: String(matches(Regex(#"^#([\da-fA-F]){3}$|^#([\da-fA-F]){6}$|^rgb\(\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*\)$|^rgba\(\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*((0.[0-9]*)|[01])\s*\)$|^rgb\((\d+)%,\s*(\d+)%,\s*(\d+)%\)$|^hsl\(\s*(0|[1-9]\d?|[12]\d\d|3[0-5]\d)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0|[1-9]\d?|100)%)\s*\)$|^hsla\(\s*(0|[1-9]\d?|[12]\d\d|3[0-5]\d)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0.[0-9]*)|[01])\s*\)$"#)))
+
+  hoverOrFocus: HoverOrFocus
+}
+
+/// Links
+///
+///
+///
+/// Defines styles to be applied on the links.
+///
+/// <p><b>Example</b></p>
+///
+///
+///
+///
+///
+/// { "color": "#3572B0" }
+class Links {
+  color: String(matches(Regex(#"^#([\da-fA-F]){3}$|^#([\da-fA-F]){6}$|^rgb\(\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*\)$|^rgba\(\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*((0.[0-9]*)|[01])\s*\)$|^rgb\((\d+)%,\s*(\d+)%,\s*(\d+)%\)$|^hsl\(\s*(0|[1-9]\d?|[12]\d\d|3[0-5]\d)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0|[1-9]\d?|100)%)\s*\)$|^hsla\(\s*(0|[1-9]\d?|[12]\d\d|3[0-5]\d)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0.[0-9]*)|[01])\s*\)$"#)))
+}
+
+/// Menus
+///
+///
+///
+/// Defines styles to be applied on menus.
+///
+/// <p><b>Example</b></p>
+///
+///
+///
+///
+///
+/// { "hoverOrFocus": { "backgroundColor": "#3873AE" }, "color": "#000000" }
+class Menus {
+  color: String(matches(Regex(#"^#([\da-fA-F]){3}$|^#([\da-fA-F]){6}$|^rgb\(\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*\)$|^rgba\(\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*((0.[0-9]*)|[01])\s*\)$|^rgb\((\d+)%,\s*(\d+)%,\s*(\d+)%\)$|^hsl\(\s*(0|[1-9]\d?|[12]\d\d|3[0-5]\d)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0|[1-9]\d?|100)%)\s*\)$|^hsla\(\s*(0|[1-9]\d?|[12]\d\d|3[0-5]\d)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0.[0-9]*)|[01])\s*\)$"#)))
+
+  hoverOrFocus: HoverOrFocus
+}
+
+/// Content
+///
+///
+///
+/// Defines styles to be applied on the content view.
+///
+/// <p><b>Example</b></p>
+///
+///
+///
+///
+///
+/// { "screen": { "layer": { "width": "100%", "height": "250px", "backgroundImage":
+/// "url('http://path/to/img/skyline.jpg')", "backgroundSize": "cover", "backgroundRepeat": "no-repeat"
+/// }, "gutterTop": "20px", "gutterRight": "small", "gutterBottom": "10px", "gutterLeft": "small",
+/// "background": "linear-gradient(45deg, rgba(176,104,112,1) 0%, rgba(244,212,216,1) 100%)" },
+/// "container": { "padding": "0 20px", "borderRadius": "10px", "background": "#F4D4D8" }, "header": {
+/// "padding": "20px 0 90px 20px", "borderRadius": "5px 5px 0 0", "backgroundColor": "rgba(0, 0, 0, 0.2)"
+/// }, "body": { "padding": "10px", "borderRadius": "0 0 5px 5px", "background": "#FFFFFF" } }
+class Content {
+  container: Container
+
+  screen: Screen
+
+  header: ContentHeader
+
+  body: Body
+}
+
+/// Container
+///
+///
+///
+/// <p> Defines styles to be applied to the container of content view. </p> <p> The supported properties
+/// include shorthand <i>background</i> and all CSS background properties. The keys are the camelCased
+/// versions of corresponding CSS properties, like <i>backgroundImage</i>, <i>backgroundColor</i>,
+/// <i>backgroundSize</i>, <i>backgroundPosition</i>, <i>backgroundRepeat</i>, <i>backgroundClip</i>,
+/// <i>backgroundOrigin</i>, <i>backgroundAttachment</i>, and <i>backgroundBlendMode</i>. </p>
+///
+/// <p><b>Example</b></p>
+///
+///
+///
+///
+///
+/// { "padding": "0 20px", "borderRadius": "10px", "background": "#F4D4D8" }
+class Container {
+  backgroundClip: String(matches(Regex("^((?![;|}]).)*$")))?
+
+  padding: String(matches(Regex(#"^(0|(\d*)(em|ex|in|cm|mm|pt|pc|px|%))( 0| (\d*)(em|ex|in|cm|mm|pt|pc|px|%)){0,3}$"#)))
+
+  backgroundColor: String(matches(Regex(#"^#([\da-fA-F]){3}$|^#([\da-fA-F]){6}$|^rgb\(\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*\)$|^rgba\(\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*((0.[0-9]*)|[01])\s*\)$|^rgb\((\d+)%,\s*(\d+)%,\s*(\d+)%\)$|^hsl\(\s*(0|[1-9]\d?|[12]\d\d|3[0-5]\d)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0|[1-9]\d?|100)%)\s*\)$|^hsla\(\s*(0|[1-9]\d?|[12]\d\d|3[0-5]\d)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0.[0-9]*)|[01])\s*\)$"#)))?
+
+  backgroundAttachment: String(matches(Regex("^((?![;|}]).)*$")))?
+
+  borderRadius: String(matches(Regex(#"^(0|(\d*)(em|ex|in|cm|mm|pt|pc|px|%))( 0| (\d*)(em|ex|in|cm|mm|pt|pc|px|%)){0,3}$"#)))
+
+  background: String(matches(Regex("^((?![;|}]).)*$")))?
+
+  backgroundImage: String(matches(Regex("^((?![;|}]).)*$")))?
+
+  backgroundSize: String(matches(Regex(#"auto|cover|contain|initial|inherit|^(0|(\d*)(em|ex|in|cm|mm|pt|pc|px|%))( 0| (\d*)(em|ex|in|cm|mm|pt|pc|px|%)){0,3}$"#)))?
+
+  backgroundPosition: String(matches(Regex("^((?![;|}]).)*$")))?
+
+  backgroundBlendMode: String(matches(Regex("^((?![;|}]).)*$")))?
+
+  backgroundRepeat: String(matches(Regex("^((?![;|}]).)*$")))?
+
+  backgroundOrigin: String(matches(Regex("^((?![;|}]).)*$")))?
+}
+
+/// Screen
+///
+///
+///
+/// <p> Defines styles to be applied on the underlay of content view. </p> <p> The supported properties
+/// include shorthand <i>background</i> and all CSS background element properties. The keys are the
+/// camelCased versions of corresponding CSS properties, like <i>backgroundImage</i>,
+/// <i>backgroundColor</i>, <i>backgroundSize</i>, <i>backgroundPosition</i>, <i>backgroundRepeat</i>,
+/// <i>backgroundClip</i>, <i>backgroundOrigin</i>, <i>backgroundAttachment</i>, and
+/// <i>backgroundBlendMode</i>. </p>
+///
+/// <p><b>Example</b></p>
+///
+///
+///
+///
+///
+/// { "layer": { "width": "100%", "height": "250px", "backgroundImage":
+/// "url('http://path/to/img/skyline.jpg')", "backgroundSize": "cover", "backgroundRepeat": "no-repeat"
+/// }, "gutterTop": "20px", "gutterRight": "small", "gutterBottom": "10px", "gutterLeft": "small",
+/// "background": "linear-gradient(45deg, rgba(176,104,112,1) 0%, rgba(244,212,216,1) 100%)" }
+class Screen {
+  gutterTop: String(matches(Regex(#"none|default|^(0|(\d*)(em|ex|in|cm|mm|pt|pc|px|%))$"#)))
+
+  backgroundColor: String(matches(Regex(#"^#([\da-fA-F]){3}$|^#([\da-fA-F]){6}$|^rgb\(\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*\)$|^rgba\(\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*((0.[0-9]*)|[01])\s*\)$|^rgb\((\d+)%,\s*(\d+)%,\s*(\d+)%\)$|^hsl\(\s*(0|[1-9]\d?|[12]\d\d|3[0-5]\d)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0|[1-9]\d?|100)%)\s*\)$|^hsla\(\s*(0|[1-9]\d?|[12]\d\d|3[0-5]\d)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0.[0-9]*)|[01])\s*\)$"#)))?
+
+  backgroundAttachment: String(matches(Regex("^((?![;|}]).)*$")))?
+
+  backgroundImage: String(matches(Regex("^((?![;|}]).)*$")))?
+
+  layer: Layer?
+
+  gutterRight: String(matches(Regex("none|default|small|medium|large")))
+
+  gutterLeft: String(matches(Regex("none|default|small|medium|large")))
+
+  backgroundClip: String(matches(Regex("^((?![;|}]).)*$")))?
+
+  background: String(matches(Regex("^((?![;|}]).)*$")))?
+
+  backgroundSize: String(matches(Regex(#"auto|cover|contain|initial|inherit|^(0|(\d*)(em|ex|in|cm|mm|pt|pc|px|%))( 0| (\d*)(em|ex|in|cm|mm|pt|pc|px|%)){0,3}$"#)))?
+
+  backgroundPosition: String(matches(Regex("^((?![;|}]).)*$")))?
+
+  backgroundBlendMode: String(matches(Regex("^((?![;|}]).)*$")))?
+
+  backgroundRepeat: String(matches(Regex("^((?![;|}]).)*$")))?
+
+  backgroundOrigin: String(matches(Regex("^((?![;|}]).)*$")))?
+
+  gutterBottom: String(matches(Regex(#"none|default|^(0|(\d*)(em|ex|in|cm|mm|pt|pc|px|%))$"#)))
+}
+
+/// Layer
+///
+///
+///
+/// <p> Defines styles to be applied on the layer of the underlay of content view. </p> <p> The supported
+/// properties include shorthand <i>background</i> and all CSS background properties. The keys are the
+/// camelCased versions of corresponding CSS properties, like <i>backgroundImage</i>,
+/// <i>backgroundColor</i>, <i>backgroundSize</i>, <i>backgroundPosition</i>, <i>backgroundRepeat</i>,
+/// <i>backgroundClip</i>, <i>backgroundOrigin</i>, <i>backgroundAttachment</i>, and
+/// <i>backgroundBlendMode</i>. </p>
+///
+/// <p><b>Example</b></p>
+///
+///
+///
+///
+///
+/// { "width": "100%", "height": "250px", "backgroundImage": "url('http://path/to/img/skyline.jpg')",
+/// "backgroundSize": "cover", "backgroundRepeat": "no-repeat" }
+class Layer {
+  backgroundClip: String(matches(Regex("^((?![;|}]).)*$")))?
+
+  backgroundColor: String(matches(Regex(#"^#([\da-fA-F]){3}$|^#([\da-fA-F]){6}$|^rgb\(\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*\)$|^rgba\(\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*((0.[0-9]*)|[01])\s*\)$|^rgb\((\d+)%,\s*(\d+)%,\s*(\d+)%\)$|^hsl\(\s*(0|[1-9]\d?|[12]\d\d|3[0-5]\d)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0|[1-9]\d?|100)%)\s*\)$|^hsla\(\s*(0|[1-9]\d?|[12]\d\d|3[0-5]\d)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0.[0-9]*)|[01])\s*\)$"#)))?
+
+  backgroundAttachment: String(matches(Regex("^((?![;|}]).)*$")))?
+
+  background: String(matches(Regex("^((?![;|}]).)*$")))?
+
+  backgroundImage: String(matches(Regex("^((?![;|}]).)*$")))?
+
+  width: String(matches(Regex(#"^(0|(\d*)(em|ex|in|cm|mm|pt|pc|px|%))$"#)))
+
+  backgroundSize: String(matches(Regex(#"auto|cover|contain|initial|inherit|^(0|(\d*)(em|ex|in|cm|mm|pt|pc|px|%))( 0| (\d*)(em|ex|in|cm|mm|pt|pc|px|%)){0,3}$"#)))?
+
+  backgroundPosition: String(matches(Regex("^((?![;|}]).)*$")))?
+
+  backgroundBlendMode: String(matches(Regex("^((?![;|}]).)*$")))?
+
+  backgroundRepeat: String(matches(Regex("^((?![;|}]).)*$")))?
+
+  backgroundOrigin: String(matches(Regex("^((?![;|}]).)*$")))?
+
+  height: String(matches(Regex(#"^(0|(\d*)(em|ex|in|cm|mm|pt|pc|px|%))$"#)))
+}
+
+/// ContentHeader
+///
+///
+///
+/// <p> Defines styles to be applied on the header of content view. </p> <p> The supported properties
+/// include shorthand <i>background</i> and all CSS background properties. The keys are the camelCased
+/// versions of corresponding CSS properties, like <i>backgroundImage</i>, <i>backgroundColor</i>,
+/// <i>backgroundSize</i>, <i>backgroundPosition</i>, <i>backgroundRepeat</i>, <i>backgroundClip</i>,
+/// <i>backgroundOrigin</i>, <i>backgroundAttachment</i>, and <i>backgroundBlendMode</i>. </p>
+///
+/// <h2>Example</h2>
+///
+///
+///
+///
+///
+/// { "padding": "20px 0 90px 20px", "borderRadius": "5px 5px 0 0", "backgroundColor": "rgba(0, 0, 0,
+/// 0.2)" }
+class ContentHeader {
+  backgroundClip: String(matches(Regex("^((?![;|}]).)*$")))?
+
+  padding: String(matches(Regex(#"^(0|(\d*)(em|ex|in|cm|mm|pt|pc|px|%))( 0| (\d*)(em|ex|in|cm|mm|pt|pc|px|%)){0,3}$"#)))
+
+  backgroundColor: String(matches(Regex(#"^#([\da-fA-F]){3}$|^#([\da-fA-F]){6}$|^rgb\(\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*\)$|^rgba\(\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*((0.[0-9]*)|[01])\s*\)$|^rgb\((\d+)%,\s*(\d+)%,\s*(\d+)%\)$|^hsl\(\s*(0|[1-9]\d?|[12]\d\d|3[0-5]\d)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0|[1-9]\d?|100)%)\s*\)$|^hsla\(\s*(0|[1-9]\d?|[12]\d\d|3[0-5]\d)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0.[0-9]*)|[01])\s*\)$"#)))?
+
+  backgroundAttachment: String(matches(Regex("^((?![;|}]).)*$")))?
+
+  borderRadius: String(matches(Regex(#"^(0|(\d*)(em|ex|in|cm|mm|pt|pc|px|%))( 0| (\d*)(em|ex|in|cm|mm|pt|pc|px|%)){0,3}$"#)))
+
+  background: String(matches(Regex("^((?![;|}]).)*$")))?
+
+  backgroundImage: String(matches(Regex("^((?![;|}]).)*$")))?
+
+  backgroundSize: String(matches(Regex(#"auto|cover|contain|initial|inherit|^(0|(\d*)(em|ex|in|cm|mm|pt|pc|px|%))( 0| (\d*)(em|ex|in|cm|mm|pt|pc|px|%)){0,3}$"#)))?
+
+  backgroundPosition: String(matches(Regex("^((?![;|}]).)*$")))?
+
+  backgroundBlendMode: String(matches(Regex("^((?![;|}]).)*$")))?
+
+  backgroundRepeat: String(matches(Regex("^((?![;|}]).)*$")))?
+
+  backgroundOrigin: String(matches(Regex("^((?![;|}]).)*$")))?
+}
+
+/// Body
+///
+///
+///
+/// <p> Defines styles to be applied on the body of content view. </p> <p> The supported properties
+/// include <i>background</i> shorthand property and all CSS background element properties. The keys are
+/// the camelCased versions of corresponding CSS properties, like <i>backgroundImage</i>,
+/// <i>backgroundColor</i>, <i>backgroundSize</i>, <i>backgroundPosition</i>, <i>backgroundRepeat</i>,
+/// <i>backgroundClip</i>, <i>backgroundOrigin</i>, <i>backgroundAttachment</i>, and
+/// <i>backgroundBlendMode</i>. </p>
+///
+/// <p><b>Example</b></p>
+///
+///
+///
+///
+///
+/// { "padding": "10px", "borderRadius": "0 0 5px 5px", "background": "#FFFFFF" }
+class Body {
+  backgroundClip: String(matches(Regex("^((?![;|}]).)*$")))?
+
+  padding: String(matches(Regex(#"^(0|(\d*)(em|ex|in|cm|mm|pt|pc|px|%))( 0| (\d*)(em|ex|in|cm|mm|pt|pc|px|%)){0,3}$"#)))
+
+  backgroundColor: String(matches(Regex(#"^#([\da-fA-F]){3}$|^#([\da-fA-F]){6}$|^rgb\(\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*\)$|^rgba\(\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*(0|[1-9]\d?|1\d\d?|2[0-4]\d|25[0-5])\s*,\s*((0.[0-9]*)|[01])\s*\)$|^rgb\((\d+)%,\s*(\d+)%,\s*(\d+)%\)$|^hsl\(\s*(0|[1-9]\d?|[12]\d\d|3[0-5]\d)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0|[1-9]\d?|100)%)\s*\)$|^hsla\(\s*(0|[1-9]\d?|[12]\d\d|3[0-5]\d)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0|[1-9]\d?|100)%)\s*,\s*((0.[0-9]*)|[01])\s*\)$"#)))?
+
+  backgroundAttachment: String(matches(Regex("^((?![;|}]).)*$")))?
+
+  borderRadius: String(matches(Regex(#"^(0|(\d*)(em|ex|in|cm|mm|pt|pc|px|%))( 0| (\d*)(em|ex|in|cm|mm|pt|pc|px|%)){0,3}$"#)))
+
+  background: String(matches(Regex("^((?![;|}]).)*$")))?
+
+  backgroundImage: String(matches(Regex("^((?![;|}]).)*$")))?
+
+  backgroundSize: String(matches(Regex(#"auto|cover|contain|initial|inherit|^(0|(\d*)(em|ex|in|cm|mm|pt|pc|px|%))( 0| (\d*)(em|ex|in|cm|mm|pt|pc|px|%)){0,3}$"#)))?
+
+  backgroundPosition: String(matches(Regex("^((?![;|}]).)*$")))?
+
+  backgroundBlendMode: String(matches(Regex("^((?![;|}]).)*$")))?
+
+  backgroundRepeat: String(matches(Regex("^((?![;|}]).)*$")))?
+
+  backgroundOrigin: String(matches(Regex("^((?![;|}]).)*$")))?
+}
+
+typealias BearerMethodSchema = "authorization-header"|"form-encoded"|"uri-query"|BearerMethodSchemaAlternate1
+
+/// ModuleKeySchema
+///
+/// A key for the module. Must be unique within the manifest.
+typealias ModuleKeySchema = String(matches(Regex("^[a-zA-Z0-9_-]+$")))
+
+typealias HostedResourcesSchema = Listing<HostedResourcesSchema>
+
+typealias RemotesSchema = Listing<RemotesSchema>
+
+/// Array
+typealias Array = Listing<String>
+
+/// ExtensionKey
+///
+/// The key for an extension in CaaS. That means that this is a reference to another extension in your
+/// descriptor / manifest.
+///
+/// This key is defined in:
+/// https://bitbucket.org/atlassian/connect-service/src/cd7252b/service/cs-apps/api.raml#lines-1094
+typealias ExtensionKey = String(length.isBetween(1, 255), matches(Regex("^[a-zA-Z0-9-._]+$")))
+
+/// FilteredProductEvents
+typealias FilteredProductEvents = Listing<FilteredProductEvent>
+
+typealias DisplayConditions = NotAlternate0|NotAlternate1|AndAlternate2|DisplayConditionsAlternate3|DisplayConditionsAlternate4
