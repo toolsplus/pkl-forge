@@ -1,47 +1,11 @@
 import { execSync } from 'node:child_process';
-import { select } from '@inquirer/prompts';
 import { writeFile } from 'node:fs/promises';
+import { existsSync, mkdirSync } from 'node:fs';
 import update from 'immutability-helper';
-import semverRsort from 'semver/functions/rsort.js';
+import { getExePath } from '@pkl-community/pkl';
 
-const forgeManifestPackageVersionJson = execSync(
-  'npm view @forge/manifest versions --json',
-);
-const forgeManifestPackageVersions = JSON.parse(
-  forgeManifestPackageVersionJson.toString(),
-);
-
-const forgeManifestPackageVersionOption = await select({
-  loop: false,
-  default: 'latest',
-  message:
-    'From which @forge/manifest package version should I retrieve the manifest JSON schema?',
-  choices: [
-    {
-      name: 'Use latest',
-      value: 'latest',
-    },
-    {
-      name: 'Select a version',
-      value: 'select',
-    },
-  ],
-});
-
-const reverseSortedForgeManifestPackageVersions = semverRsort(
-  forgeManifestPackageVersions,
-);
-const forgeManifestPackageVersion =
-  forgeManifestPackageVersionOption === 'select'
-    ? await select({
-        message:
-          'Select the @forge/manifest package version from which to retrieve the Forge manifest definition',
-        loop: false,
-        choices: reverseSortedForgeManifestPackageVersions.map((value) => ({
-          value,
-        })),
-      })
-    : reverseSortedForgeManifestPackageVersions[0];
+const outputDirectory = 'out';
+const forgeManifestPackageVersion = '5.5.3';
 
 console.log(
   `Retrieving manifest JSON schema from @forge/manifest@${forgeManifestPackageVersion}...`,
@@ -52,6 +16,8 @@ const forgeManifestJsonSchemaUrl = `https://cdn.jsdelivr.net/npm/@forge/manifest
 const forgeManifestJsonSchema = await fetch(forgeManifestJsonSchemaUrl).then(
   (r) => r.json(),
 );
+
+console.log(`Transforming manifest JSON schema...`);
 
 const connectModulesProperties = Object.fromEntries(
   Object.entries(forgeManifestJsonSchema.definitions.ModuleSchema.properties)
@@ -118,14 +84,23 @@ const transformedForgeManifestJsonSchema = update(forgeManifestJsonSchema, {
   },
 });
 
-const manifestJsonSchemaOutputFile = `out/manifest-schema.json`;
+console.log(`Writing transformed manifest JSON schema...`);
 
+if (!existsSync(outputDirectory)) {
+  mkdirSync(outputDirectory);
+}
+
+const manifestJsonSchemaOutputFile = `${outputDirectory}/manifest-schema.json`;
 await writeFile(
   manifestJsonSchemaOutputFile,
   JSON.stringify(transformedForgeManifestJsonSchema, null, 4),
   { encoding: 'utf8' },
 );
 
-execSync(
-  `pkl eval package://pkg.pkl-lang.org/pkl-pantry/org.json_schema.contrib@1.0.0#/generate.pkl -m out -p source="${manifestJsonSchemaOutputFile}"`,
-);
+const command = `${getExePath()} eval package://pkg.pkl-lang.org/pkl-pantry/org.json_schema.contrib@1.0.1#/generate.pkl -m ${outputDirectory} -p source="${manifestJsonSchemaOutputFile}"`;
+
+console.log(`Generating manifest pkl schema with command:\n\t${command}`);
+
+execSync(command);
+
+console.log(`Generated ${outputDirectory}/ManifestSchema.pkl`);

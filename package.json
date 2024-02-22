@@ -3,16 +3,27 @@
   "type": "module",
   "version": "1.0.0",
   "description": "Pkl code to generate a pkl template to verify and configure a Atlassian Forge manifest.pkl file.",
-  "main": "src/index.mjs",
+  "main": "src/genereate.js",
   "scripts": {
-    "generate": "node src/index.mjs"
+    "generate": "node src/genereate.js",
+    "version:inspect": "node src/inspect-version.js",
+    "semantic-release": "semantic-release",
+    "prepare": "husky install"
   },
   "author": "tobias.binna@toolsplus.io",
   "license": "MIT",
   "devDependencies": {
+    "@commitlint/cli": "^18.6.1",
+    "@commitlint/config-angular": "^18.6.1",
     "@inquirer/prompts": "^4.1.0",
+    "@pkl-community/pkl": "^0.25.1-2",
+    "husky": "^9.0.11",
     "immutability-helper": "^3.1.1",
     "prettier": "3.2.5",
+    "semantic-release": "^23.0.2",
     "semver": "^7.6.0"
+  },
+  "dependencies": {
+    "@pkl-community/pkl-eval": "^0.0.3"
   }
 }

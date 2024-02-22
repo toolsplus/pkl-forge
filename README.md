@@ -2,8 +2,6 @@
 
 Tooling to generate a pkl template from the Forge manifest JSON schema. This allows to verify and configure a dynamic Atlassian Forge manifest.pkl file.
 
-All instructions require [pkl to be installed](https://pkl-lang.org/main/current/pkl-cli/index.html#installation).
-
 Use the following command to generate the `ManifestSchema.pkl` template
 
 ```shell
@@ -22,7 +20,7 @@ npm run generate
 ### Converting any JSON Schema to pkl template:
 
 ```shell
-pkl eval package://pkg.pkl-lang.org/pkl-pantry/org.json_schema.contrib@1.0.0#/generate.pkl -m . -p source="https://json.schemastore.org/github-action.json"
+pkl eval package://pkg.pkl-lang.org/pkl-pantry/org.json_schema.contrib@1.0.1#/generate.pkl -m . -p source="https://json.schemastore.org/github-action.json"
 ```
 
 Refer to the instructions here: https://github.com/apple/pkl/issues/92#issuecomment-1936593897
