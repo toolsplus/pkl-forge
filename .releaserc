@@ -1,0 +1,22 @@
+{
+  "branches": [
+    "main",
+    { "name": "beta", "prerelease": true},
+    { "name": "next", "prerelease": true},
+    { "name": "test-*", "prerelease": true}
+  ],
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/release-notes-generator",
+    [
+          "@semantic-release/github",
+          {
+            "assets": [
+              { "path": "out/manifest-schema.json", "label": "Forge Manifest JSON Schema" },
+              { "path": "out/ManifestSchema.pkl", "label": "Forge Manifest Pkl Schema" }
+            ]
+          }
+        ]
+  ],
+  "preset": "angular"
+}
